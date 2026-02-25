@@ -13,10 +13,11 @@ import {
 import { TaskVariant } from '@/app/store/types';
 import { useAppSelector } from '@/shared/lib/hooks/redux';
 import { selectStatusOptions } from '@/app/store/selectors/statusSelectors';
+import type { TaskDto } from '@/shared/api/types/task.dto';
 import { mockUsers } from '@/app/store/mock';
 
 import styles from './TaskProperties.module.scss';
-import type { TaskDto } from '@/shared/api/types/task.dto';
+
 
 interface TaskPropertiesProps {
   users?: AssigneeOption[];

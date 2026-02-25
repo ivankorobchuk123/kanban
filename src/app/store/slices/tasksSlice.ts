@@ -97,7 +97,7 @@ const tasksSlice = createSlice({
       );
       const maxOrder =
         tasksInColumn.length > 0
-          ? Math.max(...tasksInColumn.map((t) => t.order), -1)
+          ? Math.max(...tasksInColumn.map((item) => item.order), -1)
           : -1;
       const newId = getNextTaskId(state.tasks);
 
@@ -130,7 +130,7 @@ const tasksSlice = createSlice({
       );
       const minOrder =
         tasksInColumn.length > 0
-          ? Math.min(...tasksInColumn.map((t) => t.order), 0)
+          ? Math.min(...tasksInColumn.map((item) => item.order), 0)
           : 0;
       const newId = getNextTaskId(state.tasks);
 
@@ -252,17 +252,23 @@ const tasksSlice = createSlice({
     ) => {
       const { taskId, comments } = action.payload;
       const task = findTaskById(state.tasks, taskId);
-      if (task) task.comments = comments;
+
+      if (task) {
+        task.comments = comments;
+      }
     },
 
     removeTaskById: (state, action: PayloadAction<string>) => {
       const taskId = action.payload;
-      state.tasks = state.tasks.filter((t) => String(t.id) !== String(taskId));
-      if (state.activeTaskId === taskId) state.activeTaskId = null;
+      state.tasks = state.tasks.filter((item) => String(item.id) !== String(taskId));
+      if (state.activeTaskId === taskId) {
+        state.activeTaskId = null;
+      }
     },
 
     toggleTaskComplete: (state, action: PayloadAction<string>) => {
       const task = findTaskById(state.tasks, action.payload);
+
       if (task && 'completed' in task) {
         (task as { completed?: boolean }).completed = !(
           task as { completed?: boolean }
@@ -275,7 +281,9 @@ const tasksSlice = createSlice({
       action: PayloadAction<{ id: string; text: string }>
     ) => {
       const task = findTaskById(state.tasks, action.payload.id);
-      if (task) (task as { title?: string }).title = action.payload.text;
+      if (task) {
+        (task as { title?: string }).title = action.payload.text;
+      }
     },
 
     removeTasksByColumn: (
@@ -289,7 +297,7 @@ const tasksSlice = createSlice({
           state.activeTaskId = null;
         }
       }
-      state.tasks = state.tasks.filter((t) => t.columnAlias !== columnAlias);
+      state.tasks = state.tasks.filter((item) => item.columnAlias !== columnAlias);
     },
 
     updateTaskAssignee: (

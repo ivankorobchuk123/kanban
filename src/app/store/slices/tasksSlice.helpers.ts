@@ -4,7 +4,7 @@ import type { StatusOption } from '@/app/store/statusOptions';
 type TaskWithId = { id?: number };
 
 export function getNextTaskId(tasks: TaskWithId[]): number {
-  const maxId = tasks.reduce((max, t) => Math.max(max, t.id ?? 0), 0);
+  const maxId = tasks.reduce((max, item) => Math.max(max, item.id ?? 0), 0);
   return maxId + 1;
 }
 
@@ -12,7 +12,7 @@ export function findTaskById<T extends { id?: number }>(
   tasks: T[],
   taskId: string
 ): T | undefined {
-  return tasks.find((t) => String(t.id) === String(taskId));
+  return tasks.find((item) => String(item.id) === String(taskId));
 }
 
 export function createNewTask(params: {

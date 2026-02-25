@@ -2,7 +2,10 @@ import { useState, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux';
 import { addColumn } from '@/app/store/slices/columnsSlice';
 import { addStatusOption } from '@/app/store/slices/statusOptionsSlice';
-import { setSearchQuery, addTaskStartAndOpenThunk } from '@/app/store/slices/tasksSlice';
+import {
+  setSearchQuery,
+  addTaskStartAndOpenThunk,
+} from '@/app/store/slices/tasksSlice';
 import { selectStatusObjects } from '@/app/store/selectors/statusSelectors';
 import { AddColumnPopup } from '@/features/addColumn';
 import { TaskVariant } from '@/app/store/types';
@@ -16,10 +19,12 @@ export function HeaderBoard() {
   const searchQuery = useAppSelector((state) => state.tasks.searchQuery);
   const columns = useAppSelector((state) => state.columns.columns);
   const statusObjects = useAppSelector(selectStatusObjects);
+
   const [isAddColumnOpen, setIsAddColumnOpen] = useState(false);
 
   const handleNewTask = () => {
     const hasColumn = columns.some((col) => col.alias === NEW_COLUMN_ALIAS);
+
     if (!hasColumn) {
       const status = statusObjects[NEW_COLUMN_ALIAS];
       if (status) {
@@ -39,6 +44,7 @@ export function HeaderBoard() {
   const handleAddColumnSubmit = useCallback(
     (title: string, color: string) => {
       const alias = `column-${Date.now()}`;
+
       dispatch(
         addColumn({
           alias,

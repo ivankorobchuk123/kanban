@@ -74,6 +74,7 @@ export function Column({ column, variant }: ColumnProps) {
     if (ok) {
       dispatch(deleteColumn({ columnAlias: column.alias }));
       dispatch(removeTasksByColumn({ columnAlias: column.alias }));
+
       if (column.alias.startsWith('column-')) {
         dispatch(removeStatusOption(column.alias));
       }

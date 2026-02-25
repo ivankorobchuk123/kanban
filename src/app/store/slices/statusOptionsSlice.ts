@@ -22,12 +22,12 @@ const statusOptionsSlice = createSlice({
   reducers: {
     addStatusOption: (state, action: PayloadAction<StatusOption>) => {
       const { id } = action.payload;
-      if (!state.statusOptions.some((s) => s.id === id)) {
+      if (!state.statusOptions.some((item) => item.id === id)) {
         state.statusOptions.push(action.payload);
       }
     },
     removeStatusOption: (state, action: PayloadAction<string>) => {
-      state.statusOptions = state.statusOptions.filter((s) => s.id !== action.payload);
+      state.statusOptions = state.statusOptions.filter((item) => item.id !== action.payload);
     },
   },
 });

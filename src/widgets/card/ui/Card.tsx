@@ -3,7 +3,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Avatar } from '@/shared/ui/Avatar';
 import { useConfirm } from '@/shared/ui/ConfirmDialog';
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux';
-import { updateTaskTitle, removeTask, setActiveTask } from '@/app/store/slices/tasksSlice';
+import {
+  updateTaskTitle,
+  removeTask,
+  setActiveTask,
+} from '@/app/store/slices/tasksSlice';
 import { useTaskDraggable } from '@/shared/lib/dnd/useTaskDraggable';
 import { useTaskDropTarget } from '@/shared/lib/dnd/useTaskDropTarget';
 import type { TaskDropParams } from '@/shared/lib/dnd/useTaskDropTarget';
@@ -23,7 +27,7 @@ interface CardProps {
 
 export function Card({
   title,
-  taskNumber = 'REC-1987',
+  taskNumber = 'REC-1',
   card,
   columnAlias,
   dropTargetIndex,
@@ -41,9 +45,12 @@ export function Card({
   const cardRef = useRef<HTMLDivElement>(null);
   const [closestEdge, setClosestEdge] = useState<'top' | 'bottom' | null>(null);
 
-  const handleClosestEdgeChange = useCallback((edge: 'top' | 'right' | 'bottom' | 'left' | null) => {
-    setClosestEdge(edge === 'top' || edge === 'bottom' ? edge : null);
-  }, []);
+  const handleClosestEdgeChange = useCallback(
+    (edge: 'top' | 'right' | 'bottom' | 'left' | null) => {
+      setClosestEdge(edge === 'top' || edge === 'bottom' ? edge : null);
+    },
+    []
+  );
 
   useTaskDraggable(cardRef, cardRef, taskId, columnAlias);
   useTaskDropTarget(
@@ -183,7 +190,9 @@ export function Card({
               alt={card.assignee?.name ?? 'User Avatar'}
               size="xs"
             />
-            <div className={styles.userName}>{card.assignee?.name ?? 'John Doe'}</div>
+            <div className={styles.userName}>
+              {card.assignee?.name ?? 'John Doe'}
+            </div>
           </div>
         </div>
       </div>

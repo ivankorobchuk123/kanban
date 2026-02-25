@@ -13,6 +13,7 @@ import { HeaderBoard } from '@/widgets/headerBoard/ui/HeaderBoard';
 
 export function TaskBoard() {
   const dispatch = useAppDispatch();
+
   const boardData = useAppSelector(selectFilteredBoardData);
   const activeTaskInfo = useAppSelector(selectActiveTaskInfo);
   const statusObjects = useAppSelector(selectStatusObjects);

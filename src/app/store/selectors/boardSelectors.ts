@@ -12,7 +12,7 @@ export const selectActiveTaskId = (state: RootState) =>
 
 export const selectTasksByColumn = (state: RootState, columnAlias: string) =>
   state.tasks.tasks
-    .filter((t) => t.columnAlias === columnAlias)
+    .filter((item) => item.columnAlias === columnAlias)
     .sort((a, b) => a.order - b.order);
 
 export const selectBoardData = (state: RootState) => {
@@ -21,7 +21,7 @@ export const selectBoardData = (state: RootState) => {
   return columns.map((column) => ({
     ...column,
     tasks: tasks
-      .filter((t) => t.columnAlias === column.alias)
+      .filter((item) => item.columnAlias === column.alias)
       .sort((a, b) => a.order - b.order),
   }));
 };
@@ -35,7 +35,7 @@ export const selectFilteredBoardData = (state: RootState) => {
     return columns.map((col) => ({
       ...col,
       tasks: tasks
-        .filter((t) => t.columnAlias === col.alias)
+        .filter((item) => item.columnAlias === col.alias)
         .sort((a, b) => a.order - b.order),
     }));
   }
@@ -43,11 +43,11 @@ export const selectFilteredBoardData = (state: RootState) => {
   return columns.map((col) => ({
     ...col,
     tasks: tasks
-      .filter((t) => t.columnAlias === col.alias)
+      .filter((item) => item.columnAlias === col.alias)
       .filter(
-        (t) =>
-          (t.title ?? '').toLowerCase().includes(query) ||
-          (t.comments ?? '').toLowerCase().includes(query)
+        (item) =>
+          (item.title ?? '').toLowerCase().includes(query) ||
+          (item.comments ?? '').toLowerCase().includes(query)
       )
       .sort((a, b) => a.order - b.order),
   }));
@@ -55,11 +55,15 @@ export const selectFilteredBoardData = (state: RootState) => {
 
 export const selectActiveTaskInfo = (state: RootState) => {
   const activeTaskId = state.tasks.activeTaskId;
-  if (!activeTaskId) return null;
+  if (!activeTaskId) {
+    return null
+  };
   const task = state.tasks.tasks.find(
-    (t) => String(t.id) === String(activeTaskId)
+    (item) => String(item.id) === String(activeTaskId)
   );
-  if (!task) return null;
+  if (!task) {
+    return null;
+  }
   return {
     task,
     columnAlias: task.columnAlias,
