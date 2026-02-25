@@ -1,0 +1,41 @@
+{
+  "app": {
+    "title": "Todo Board"
+  },
+  "column": {
+    "add": "Add Column",
+    "newColumn": "New Column",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this column and all its tasks?",
+    "placeholder": "Column title",
+    "selectAll": "Select All",
+    "taskCount": "{{count}} task",
+    "taskCount_plural": "{{count}} tasks"
+  },
+  "task": {
+    "add": "Add Task",
+    "placeholder": "New task...",
+    "completed": "Completed",
+    "incomplete": "Incomplete",
+    "edit": "Edit",
+    "delete": "Delete",
+    "empty": "No tasks yet"
+  },
+  "search": {
+    "placeholder": "Search tasks...",
+    "noResults": "No tasks found"
+  },
+  "filter": {
+    "all": "All",
+    "completed": "Completed",
+    "incomplete": "Incomplete"
+  },
+  "bulk": {
+    "delete": "Delete selected",
+    "complete": "Mark as complete",
+    "incomplete": "Mark as incomplete",
+    "moveTo": "Move to...",
+    "clearSelection": "Clear selection",
+    "selectedCount": "{{count}} selected"
+  }
+}

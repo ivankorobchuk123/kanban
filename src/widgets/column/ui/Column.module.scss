@@ -1,0 +1,43 @@
+.column {
+    width: 276px;
+    padding: 7px 9px;
+    border-radius: 11px;
+    background-color: rgba(66,35,3,.031);
+    &.primary {
+        background-color: var(--blue-3);
+        .count {
+            color: var(--blue-6);
+        }
+    }
+    &.secondary {
+        background-color: var(--yellow-4);
+        .count {
+            color: var(--yellow-7);
+        }
+    }
+    &.danger {
+        background-color: var(--red-1);
+        .count {
+            color: var(--red-6);
+        }
+        }
+    &.ghost {
+        background-color: var(--grey-1);
+        .count {
+            color: var(--grey-6);
+        }
+    }
+    .cards {
+        padding-top: 12px;
+    }
+    .wrapBadge {
+        padding-left: 3px;
+    }
+
+    .count {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--grey-6);
+        padding-left: 8px;
+    }
+}

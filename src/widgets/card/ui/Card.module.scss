@@ -1,0 +1,48 @@
+.card {
+    display: flex;
+    border: 1px solid var(--grey-3);
+    border-radius: 10px;
+    background-color: #ffffff;
+    margin-bottom: 8px;
+    padding: 9px 10px;
+    min-height: 95px;
+    .title {
+        font-size: var(--font-size-sm);
+        font-weight: 700;
+        color: var(--color-text);
+        line-height: 1.5;
+        font-size: 14px;
+        
+        .icon {
+            font-size: 18px;
+            margin-right: 9px;
+        }
+        span {
+            display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        }
+    }
+    .taskNumber {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--grey-6);
+        line-height: 1.5;
+        padding-top: 8px;
+    }
+    .user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-top: 8px;
+        margin-top: auto;
+    }
+    .userName {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--grey-6);
+    }
+}
+
+

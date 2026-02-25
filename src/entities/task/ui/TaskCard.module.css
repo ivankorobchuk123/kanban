@@ -1,0 +1,93 @@
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.card.completed {
+  background: #f8fafc;
+}
+
+.card.completed .text {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+.card.selected {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+.dragHandle {
+  cursor: grab;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  padding: 0.25rem;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.text {
+  flex: 1;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.editInput {
+  flex: 1;
+  padding: 0.25rem 0;
+  border: none;
+  border-bottom: 1px solid #6366f1;
+  font-size: 0.875rem;
+  outline: none;
+  background: transparent;
+}
+
+.highlight {
+  background: #fef08a;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0.6;
+}
+
+.card:hover .actions {
+  opacity: 1;
+}
+
+.actionBtn {
+  padding: 0.25rem !important;
+  min-width: auto !important;
+}
+
+.selectCheckbox {
+  flex-shrink: 0;
+}

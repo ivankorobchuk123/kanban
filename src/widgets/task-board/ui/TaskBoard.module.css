@@ -1,0 +1,11 @@
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.4;
+    word-break: break-word;
+    margin-bottom: 16px;
+}
+
+.board {
+    gap: 16px;
+}
