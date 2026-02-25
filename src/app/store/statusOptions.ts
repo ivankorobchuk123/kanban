@@ -4,25 +4,15 @@ export interface StatusOption {
   id: string;
   label: string;
   variant: TaskVariant;
+  color: string;
 }
 
-export const STATUS_OPTIONS: StatusOption[] = [
-  { id: 'in-progress', label: 'In Progress', variant: TaskVariant.SECONDARY },
-  { id: 'new', label: 'New', variant: TaskVariant.GHOST },
-  { id: 'need-test', label: 'Need Test', variant: TaskVariant.PRIMARY },
-  { id: 'backlog', label: 'Backlog', variant: TaskVariant.BACKLOG },
-  { id: 'done', label: 'Done', variant: TaskVariant.DONE },
-  { id: 'canceled', label: 'Canceled', variant: TaskVariant.CANCELED },
-  { id: 'blocked', label: 'Blocked', variant: TaskVariant.BLOCKED },
-];
-
-
-export const STATUS_OBJECTS: Record<string, StatusOption> = {
-  'in-progress': STATUS_OPTIONS[0],
-  'new': STATUS_OPTIONS[1],
-  'need-test': STATUS_OPTIONS[2],
-  'backlog': STATUS_OPTIONS[3],
-  'done': STATUS_OPTIONS[4],
-  'canceled': STATUS_OPTIONS[5],
-  'blocked': STATUS_OPTIONS[6],
+export const INITIAL_STATUS_OBJECTS: Record<string, StatusOption> = {
+  'in-progress': { id: 'in-progress', label: 'In Progress', variant: TaskVariant.SECONDARY, color: '#f1e0ba' },
+  'new': { id: 'new', label: 'New', variant: TaskVariant.GHOST, color: '#1c13011c' },
+  'need-test': { id: 'need-test', label: 'Need Test', variant: TaskVariant.PRIMARY, color: '#cadef6' },
+  'backlog': { id: 'backlog', label: 'Backlog', variant: TaskVariant.BACKLOG, color: '#e7d8d2' },
+  'done': { id: 'done', label: 'Done', variant: TaskVariant.DONE, color: '#c7e9c0' },
+  'canceled': { id: 'canceled', label: 'Canceled', variant: TaskVariant.CANCELED, color: '#e4e4e4' },
+  'blocked': { id: 'blocked', label: 'Blocked', variant: TaskVariant.BLOCKED, color: '#ffcdd2' },
 };

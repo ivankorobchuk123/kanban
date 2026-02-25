@@ -1,10 +1,14 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { AppDispatch, RootState } from '@/app/store';
 import { mockTasks } from '@/app/store/mock';
 import {
   createNewTask,
   findTaskById,
   getNextTaskId,
 } from './tasksSlice.helpers';
+import { selectStatusObjects } from '@/app/store/selectors/statusSelectors';
+import type { StatusOption } from '@/app/store/statusOptions';
+import type { TaskVariant } from '@/app/store/types';
 
 const initialState = {
   tasks: mockTasks,
@@ -34,7 +38,11 @@ const tasksSlice = createSlice({
       action: PayloadAction<{ columnAlias: string; taskId: string }>
     ) => {
       const { taskId } = action.payload;
-      state.tasks = state.tasks.filter((t) => String(t.id) !== String(taskId));
+
+      state.tasks = state.tasks.filter(
+        (item) => String(item.id) !== String(taskId)
+      );
+
       if (state.activeTaskId === taskId) {
         state.activeTaskId = null;
       }
@@ -42,48 +50,64 @@ const tasksSlice = createSlice({
 
     addTask: (
       state,
-      action: PayloadAction<{ columnAlias: string; title?: string }>
+      action: PayloadAction<{
+        columnAlias: string;
+        title?: string;
+        status: StatusOption;
+      }>
     ) => {
-      const { columnAlias, title = 'New task' } = action.payload;
+      const { columnAlias, title = 'New task', status } = action.payload;
+
       const tasksInColumn = state.tasks.filter(
-        (t) => t.columnAlias === columnAlias
+        (item) => item.columnAlias === columnAlias
       );
+
       const maxOrder =
         tasksInColumn.length > 0
-          ? Math.max(...tasksInColumn.map((t) => t.order), -1)
+          ? Math.max(...tasksInColumn.map((item) => item.order), -1)
           : -1;
+
       const newId = getNextTaskId(state.tasks);
+
       state.tasks.push(
         createNewTask({
           id: newId,
           title,
           columnAlias,
           order: maxOrder + 1,
+          status,
         })
       );
     },
 
     addTaskEndAndOpen: (
       state,
-      action: PayloadAction<{ columnAlias?: string; title?: string }>
+      action: PayloadAction<{
+        columnAlias?: string;
+        title?: string;
+        status: StatusOption;
+      }>
     ) => {
       const columnAlias = action.payload.columnAlias ?? 'new';
       const title = action.payload.title ?? 'New task';
+      const status = action.payload.status;
 
       const tasksInColumn = state.tasks.filter(
-        (t) => t.columnAlias === columnAlias
+        (item) => item.columnAlias === columnAlias
       );
       const maxOrder =
         tasksInColumn.length > 0
           ? Math.max(...tasksInColumn.map((t) => t.order), -1)
           : -1;
       const newId = getNextTaskId(state.tasks);
+
       state.tasks.push(
         createNewTask({
           id: newId,
           title,
           columnAlias,
           order: maxOrder + 1,
+          status,
         })
       );
       state.activeTaskId = String(newId);
@@ -91,25 +115,32 @@ const tasksSlice = createSlice({
 
     addTaskStartAndOpen: (
       state,
-      action: PayloadAction<{ columnAlias?: string; title?: string }>
+      action: PayloadAction<{
+        columnAlias?: string;
+        title?: string;
+        status: StatusOption;
+      }>
     ) => {
       const columnAlias = action.payload.columnAlias ?? 'new';
       const title = action.payload.title ?? 'New task';
+      const status = action.payload.status;
 
       const tasksInColumn = state.tasks.filter(
-        (t) => t.columnAlias === columnAlias
+        (item) => item.columnAlias === columnAlias
       );
       const minOrder =
         tasksInColumn.length > 0
           ? Math.min(...tasksInColumn.map((t) => t.order), 0)
           : 0;
       const newId = getNextTaskId(state.tasks);
+
       state.tasks.unshift(
         createNewTask({
           id: newId,
           title,
           columnAlias,
           order: minOrder - 1,
+          status,
         })
       );
       state.activeTaskId = String(newId);
@@ -123,7 +154,8 @@ const tasksSlice = createSlice({
         status: {
           id: string;
           label: string;
-          variant: import('@/app/store/types').TaskVariant;
+          variant: TaskVariant;
+          color: string;
         };
       }>
     ) => {
@@ -135,6 +167,7 @@ const tasksSlice = createSlice({
           id: status.id,
           label: status.label,
           variant: status.variant,
+          color: status.color,
         };
       }
     },
@@ -145,21 +178,60 @@ const tasksSlice = createSlice({
         taskId: string;
         fromColumnAlias: string;
         toColumnAlias: string;
+        targetIndex: number;
         status: {
           id: string;
           label: string;
-          variant: import('@/app/store/types').TaskVariant;
+          variant: TaskVariant;
+          color: string;
         };
       }>
     ) => {
-      const { taskId, toColumnAlias, status } = action.payload;
+      const { taskId, toColumnAlias, targetIndex, status } = action.payload;
       const task = findTaskById(state.tasks, taskId);
       if (!task) return;
-      task.columnAlias = toColumnAlias;
-      task.status = status;
-      const tasksInColumn = state.tasks.filter((t) => t.columnAlias === toColumnAlias);
-      const maxOrder = tasksInColumn.length > 0 ? Math.max(...tasksInColumn.map((t) => t.order), -1) : -1;
-      task.order = maxOrder + 1;
+
+      const isSameColumn = task.columnAlias === toColumnAlias;
+      if (isSameColumn) {
+        const tasksInColumn = state.tasks
+          .filter((t) => t.columnAlias === toColumnAlias)
+          .sort((a, b) => a.order - b.order);
+
+        const currentIndex = tasksInColumn.findIndex(
+          (t) => String(t.id) === String(taskId)
+        );
+
+        if (currentIndex === -1 || currentIndex === targetIndex) return;
+
+        const reordered = [...tasksInColumn];
+        const [removed] = reordered.splice(currentIndex, 1);
+
+        reordered.splice(targetIndex, 0, removed);
+        reordered.forEach((t, i) => {
+          t.order = i;
+        });
+      } else {
+        task.columnAlias = toColumnAlias;
+        task.status = {
+          id: status.id,
+          label: status.label,
+          variant: status.variant,
+          color: status.color,
+        };
+        const tasksInTargetColumn = state.tasks
+          .filter((t) => t.columnAlias === toColumnAlias)
+          .sort((a, b) => a.order - b.order);
+
+        const tasksWithoutMoved = tasksInTargetColumn.filter(
+          (t) => String(t.id) !== String(taskId)
+        );
+        const insertIndex = Math.min(targetIndex, tasksWithoutMoved.length);
+
+        tasksWithoutMoved.splice(insertIndex, 0, task);
+        tasksWithoutMoved.forEach((t, i) => {
+          t.order = i;
+        });
+      }
     },
 
     setActiveTask: (state, action: PayloadAction<string | null>) => {
@@ -192,7 +264,9 @@ const tasksSlice = createSlice({
     toggleTaskComplete: (state, action: PayloadAction<string>) => {
       const task = findTaskById(state.tasks, action.payload);
       if (task && 'completed' in task) {
-        (task as { completed?: boolean }).completed = !(task as { completed?: boolean }).completed;
+        (task as { completed?: boolean }).completed = !(
+          task as { completed?: boolean }
+        ).completed;
       }
     },
 
@@ -227,7 +301,6 @@ const tasksSlice = createSlice({
           id: string;
           name: string;
           src?: string;
-          avatarSrc?: string;
         };
       }>
     ) => {
@@ -237,7 +310,7 @@ const tasksSlice = createSlice({
         task.assignee = {
           id: assignee.id,
           name: assignee.name,
-          src: assignee.src ?? assignee.avatarSrc ?? '',
+          src: assignee.src ?? '',
         };
       }
     },
@@ -261,4 +334,36 @@ export const {
   setActiveTask,
   setSearchQuery,
 } = tasksSlice.actions;
+
+export const addTaskThunk =
+  (payload: { columnAlias: string; title?: string }) =>
+  (dispatch: AppDispatch, getState: () => RootState) => {
+
+    const status = selectStatusObjects(getState())[payload.columnAlias];
+    if (status) {
+        dispatch(addTask({ ...payload, status }));
+    }
+  };
+
+export const addTaskStartAndOpenThunk =
+  (payload?: { columnAlias?: string; title?: string }) =>
+  (dispatch: AppDispatch, getState: () => RootState) => {
+    const columnAlias = payload?.columnAlias ?? 'new';
+    const status = selectStatusObjects(getState())[columnAlias];
+    if (status) {
+      dispatch(addTaskStartAndOpen({ ...payload, columnAlias, status }));
+    }
+  };
+
+export const addTaskEndAndOpenThunk =
+  (payload?: { columnAlias?: string; title?: string }) =>
+  (dispatch: AppDispatch, getState: () => RootState) => {
+
+    const columnAlias = payload?.columnAlias ?? 'new';
+    const status = selectStatusObjects(getState())[columnAlias];
+    if (status) {
+      dispatch(addTaskEndAndOpen({ ...payload, columnAlias, status }));
+    }
+  };
+
 export default tasksSlice.reducer;

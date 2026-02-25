@@ -1,5 +1,5 @@
 import { mockUsers } from '@/app/store/mock';
-import { STATUS_OBJECTS } from '@/app/store/statusOptions';
+import type { StatusOption } from '@/app/store/statusOptions';
 
 type TaskWithId = { id?: number };
 
@@ -20,6 +20,7 @@ export function createNewTask(params: {
   title: string;
   columnAlias: string;
   order: number;
+  status: StatusOption;
 }) {
   return {
     id: params.id,
@@ -28,6 +29,6 @@ export function createNewTask(params: {
     title: params.title,
     comments: '',
     assignee: mockUsers[0],
-    status: STATUS_OBJECTS[params.columnAlias as keyof typeof STATUS_OBJECTS],
+    status: params.status,
   };
 }

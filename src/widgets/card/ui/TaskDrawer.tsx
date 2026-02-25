@@ -101,6 +101,7 @@ export function TaskDrawer({
           alias: statusOption.id,
           title: statusOption.label,
           status: statusOption.id,
+          color: statusOption.color,
         })
       );
     }
@@ -112,6 +113,7 @@ export function TaskDrawer({
           id: statusOption.id,
           label: statusOption.label,
           variant: statusOption.variant,
+          color: statusOption.color,
         },
       })
     );
@@ -152,10 +154,9 @@ export function TaskDrawer({
         <div className={styles.section}>
           <div className={styles.propertiesHeader}>Properties</div>
           <TaskProperties
-            assignee={task.assignee as AssigneeOption}
+            task={task}
             users={mockUsers}
             onAssigneeChange={onAssigneeChange}
-            status={task.status}
             onStatusChange={onStatusChange}
           />
         </div>

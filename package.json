@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
+    "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.1.0",
+    "@atlaskit/pragmatic-drag-and-drop-react-drop-indicator": "^3.2.12",
     "@reduxjs/toolkit": "^2.11.2",
     "i18next": "^25.8.13",
     "i18next-browser-languagedetector": "^8.2.1",

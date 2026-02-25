@@ -50,7 +50,11 @@ export function Drawer({ isOpen, onClose, title, children }: DrawerProps) {
         onClick={handleOverlayClick}
         aria-hidden={!isOpen}
       />
-      <div className={`${styles.panel} ${isVisible ? styles.open : ''}`} role="dialog" aria-modal="true">
+      <div
+        className={`${styles.panel} ${isVisible ? styles.open : ''}`}
+        role="dialog"
+        aria-modal="true"
+      >
         <div className={styles.header}>
           {title && <h2 className={styles.title}>{title}</h2>}
           <button

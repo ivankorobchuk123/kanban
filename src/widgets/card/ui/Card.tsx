@@ -1,10 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Avatar } from '@/shared/ui/Avatar';
 import { useConfirm } from '@/shared/ui/ConfirmDialog';
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux';
 import { updateTaskTitle, removeTask, setActiveTask } from '@/app/store/slices/tasksSlice';
 import { useTaskDraggable } from '@/shared/lib/dnd/useTaskDraggable';
+import { useTaskDropTarget } from '@/shared/lib/dnd/useTaskDropTarget';
+import type { TaskDropParams } from '@/shared/lib/dnd/useTaskDropTarget';
+import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 
 import styles from '@/widgets/card/ui/Card.module.scss';
 import type { TaskDto } from '@/shared/api/types/task.dto';
@@ -14,6 +17,8 @@ interface CardProps {
   title: string;
   taskNumber?: string;
   columnAlias: string;
+  dropTargetIndex?: number;
+  onTaskDrop?: (params: TaskDropParams) => void;
 }
 
 export function Card({
@@ -21,6 +26,8 @@ export function Card({
   taskNumber = 'REC-1987',
   card,
   columnAlias,
+  dropTargetIndex,
+  onTaskDrop,
 }: CardProps): React.ReactElement {
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
@@ -32,8 +39,23 @@ export function Card({
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const [closestEdge, setClosestEdge] = useState<'top' | 'bottom' | null>(null);
+
+  const handleClosestEdgeChange = useCallback((edge: 'top' | 'right' | 'bottom' | 'left' | null) => {
+    setClosestEdge(edge === 'top' || edge === 'bottom' ? edge : null);
+  }, []);
 
   useTaskDraggable(cardRef, cardRef, taskId, columnAlias);
+  useTaskDropTarget(
+    cardRef,
+    columnAlias,
+    dropTargetIndex ?? 0,
+    onTaskDrop ?? (() => {}),
+    {
+      onClosestEdgeChange: handleClosestEdgeChange,
+      excludeTaskId: taskId,
+    }
+  );
 
   useEffect(() => {
     setEditValue(title);
@@ -108,13 +130,14 @@ export function Card({
     <>
       <div
         ref={cardRef}
-        className={`${styles.card} ${isDrawerOpen ? styles.active : ''} ${styles[card.status.variant]}`}
+        className={`${styles.card} ${isDrawerOpen ? styles.active : ''}`}
         onClick={openDrawer}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => e.key === 'Enter' && openDrawer()}
+        style={{ position: 'relative' }}
       >
-        
+        {closestEdge && <DropIndicator edge={closestEdge} gap="4px" />}
         <div className={styles.cardContent}>
           <div
             className={`${styles.configCard} ${isEditing && styles.noHover} flex items-center justify-between`}

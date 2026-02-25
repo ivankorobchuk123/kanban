@@ -6,6 +6,7 @@ export interface TaskDto {
     status: StatusOption
     comments?: string
     assignee?: {
+        id?: string | number
         name: string
         src: string
     }

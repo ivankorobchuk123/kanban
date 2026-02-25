@@ -9,6 +9,7 @@ export interface StatusOption {
   id: string;
   label: string;
   variant: TaskVariant;
+  color: string;
 }
 
 interface StatusSelectDropdownProps {
@@ -72,7 +73,7 @@ export function StatusSelectDropdown({
             onClose();
           }}
         >
-          <Badge variant={option.variant}>{option.label}</Badge>
+          <Badge variant={option.variant} color={option.color}>{option.label}</Badge>
         </button>
       ))}
     </div>

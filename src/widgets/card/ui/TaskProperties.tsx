@@ -11,30 +11,31 @@ import {
   type StatusOption,
 } from '@/shared/ui/StatusSelectDropdown';
 import { TaskVariant } from '@/app/store/types';
-import { STATUS_OPTIONS } from '@/app/store/statusOptions';
+import { useAppSelector } from '@/shared/lib/hooks/redux';
+import { selectStatusOptions } from '@/app/store/selectors/statusSelectors';
 import { mockUsers } from '@/app/store/mock';
 
 import styles from './TaskProperties.module.scss';
+import type { TaskDto } from '@/shared/api/types/task.dto';
 
 interface TaskPropertiesProps {
-  assignee?: AssigneeOption;
   users?: AssigneeOption[];
   onAssigneeChange?: (assignee: AssigneeOption) => void;
-  status?: StatusOption;
+  task: TaskDto;
   onStatusChange?: (status: StatusOption) => void;
 }
 
 export function TaskProperties({
-  assignee,
+  task,
   users = mockUsers as unknown as AssigneeOption[],
   onAssigneeChange,
-  status,
   onStatusChange,
 }: TaskPropertiesProps) {
   const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
   const [isStatusOpen, setIsStatusOpen] = useState(false);
   const executorRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
+  const statusOptions = useAppSelector(selectStatusOptions);
 
   const handleAssigneeClick = () => {
     setIsAssigneeOpen((prev) => !prev);
@@ -70,19 +71,19 @@ export function TaskProperties({
         >
           <div className="flex items-center gap-2">
             <Avatar
-              src={assignee?.src ?? ''}
-              alt={assignee?.name ?? ''}
+              src={task.assignee?.src ?? ''}
+              alt={task.assignee?.name ?? ''}
               size="xs"
               className={styles.executorAvatar}
             />
-            <span>{assignee?.name ?? '—'}</span>
+            <span>{task.assignee?.name ?? '—'}</span>
           </div>
           <EditButton onClick={handleAssigneeClick} />
           <AssigneeSelectDropdown
             isOpen={isAssigneeOpen}
             onClose={() => setIsAssigneeOpen(false)}
             users={users}
-            selectedId={String(assignee?.id ?? '')}
+            selectedId={String(task.assignee?.id ?? '')}
             onSelect={handleAssigneeSelect}
             anchorRef={executorRef}
           />
@@ -98,7 +99,7 @@ export function TaskProperties({
           className={`${styles.propertyValue} ${styles.statusWrapper}`}
           onClick={handleStatusClick}
         >
-          <Badge variant={status?.variant ?? TaskVariant.GHOST}>{status?.label ?? '—'}</Badge>
+          <Badge variant={task.status?.variant ?? TaskVariant.GHOST} color={task.status?.color}>{task.status?.label ?? '—'}</Badge>
           <EditButton
             onClick={(e) => {
               e.stopPropagation();
@@ -108,8 +109,8 @@ export function TaskProperties({
           <StatusSelectDropdown
             isOpen={isStatusOpen}
             onClose={() => setIsStatusOpen(false)}
-            options={STATUS_OPTIONS}
-            selectedId={status?.id ?? ''}
+            options={statusOptions}
+            selectedId={task.status?.id ?? ''}
             onSelect={handleStatusSelect}
             anchorRef={statusRef}
           />

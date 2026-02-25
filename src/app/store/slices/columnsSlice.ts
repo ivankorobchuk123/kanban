@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { mockColumns } from '@/app/store/mock';
+import type { ColumnDto } from '@/app/store/mock';
 
 const initialState = {
   columns: mockColumns,
@@ -11,9 +12,10 @@ const columnsSlice = createSlice({
   reducers: {
     addColumn: (
       state,
-      action: PayloadAction<{ alias: string; title: string; status: string }>
+      action: PayloadAction<{ alias: string; title: string; status: string; color: string }>
     ) => {
-      const { alias, title, status } = action.payload;
+      const { alias, title, status, color } = action.payload;
+
       if (state.columns.some((col) => col.alias === alias)) return;
       const minOrder =
         state.columns.length > 0
@@ -23,8 +25,10 @@ const columnsSlice = createSlice({
         alias,
         title,
         status,
+        color,
+        tasks: [],
         order: minOrder - 1,
-      });
+      } as ColumnDto);
     },
 
     deleteColumn: (state, action: PayloadAction<{ columnAlias: string }>) => {

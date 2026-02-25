@@ -19,56 +19,7 @@
       visibility: visible;
     }
   }
-  &.backlog {
-    &:hover {
-      border-color: var(--orange-5);
-    }   
-  }
-  &.done {
-    &:hover {
-      border-color: var(--green-5);
-    }
-  }
-  &.blocked {
-    &:hover {
-      border-color: var(--red-3);
-    }
-  }
-  &.canceled {
-    &:hover {
-      border-color: var(--grey-2);
-    }
-  }
-  &.primary {
-    &:hover {
-      border-color: var(--blue-5);
-    }
-  }
-  &.secondary {
-    &:hover {
-      border-color: var(--yellow-5);
-    }
-  }
-  &.danger {
-    &:hover {
-      border-color: var(--red-5);
-    }
-  }
-  &.ghost {
-    &:hover {
-      border-color: var(--grey-5);
-    }
-  }
-  &.done {
-    &:hover {
-      border-color: var(--green-5);
-    }
-  }
-  &.canceled {
-    &:hover {
-      border-color: var(--grey-5);
-    }
-  }
+
   .cardContent {
     width: 100%;
   }

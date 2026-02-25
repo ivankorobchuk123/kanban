@@ -1,6 +1,3 @@
-/**
- * Hook for making a column a drop target using pragmatic-drag-and-drop.
- */
 import { useEffect } from 'react'
 
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'

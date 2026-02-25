@@ -1,5 +1,6 @@
 import type { StatusOption } from '@/app/store/statusOptions';
-import { STATUS_OBJECTS } from '@/app/store/statusOptions';
+import { INITIAL_STATUS_OBJECTS } from '@/app/store/statusOptions';
+import type { TaskDto } from '@/shared/api/types/task.dto';
 
 export interface AssigneeOption {
   id: string | number;
@@ -17,7 +18,9 @@ export interface ColumnDto {
   alias: string;
   title: string;
   status: string;
+  color: string;
   order: number;
+  tasks: TaskDto[];
 }
 
 export interface TaskEntity {
@@ -31,24 +34,37 @@ export interface TaskEntity {
 }
 
 export const mockColumns: ColumnDto[] = [
-  { alias: 'new', title: 'New', status: STATUS_OBJECTS['new'].id, order: 0 },
+  {
+    alias: 'new',
+    title: 'New',
+    status: INITIAL_STATUS_OBJECTS['new'].id,
+    color: '#1c13011c',
+    order: 0,
+    tasks: [],
+  },
   {
     alias: 'in-progress',
     title: 'In Progress',
-    status: STATUS_OBJECTS['in-progress'].id,
+    status: INITIAL_STATUS_OBJECTS['in-progress'].id,
+    color: '#f1e0ba',
     order: 1,
+    tasks: [],
   },
   {
     alias: 'need-test',
     title: 'Need Test',
-    status: STATUS_OBJECTS['need-test'].id,
+    status: INITIAL_STATUS_OBJECTS['need-test'].id,
+    color: '#cadef6',
     order: 2,
+    tasks: [],
   },
   {
     alias: 'backlog',
     title: 'Backlog',
-    status: STATUS_OBJECTS['backlog'].id,
+    status: INITIAL_STATUS_OBJECTS['backlog'].id,
+    color: '#e7d8d2',
     order: 3,
+    tasks: [],
   },
 ];
 
@@ -57,20 +73,20 @@ export const mockTasks: TaskEntity[] = [
     id: 1,
     columnAlias: 'new',
     order: 0,
-    title: 'Обновить дизайн поп-апа на подписку',
+    title: 'Lorem Ipsum is simply dummy text of',
     comments:
       'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ips',
     assignee: mockUsers[0],
-    status: STATUS_OBJECTS['new'],
+    status: INITIAL_STATUS_OBJECTS['new'],
   },
   {
     id: 2,
     columnAlias: 'new',
     order: 1,
-    title: 'Обновить дизайн поп-апа на подписку 2',
+    title: 'Lorem Ipsum is simply dummy text of 2',
     comments: '',
     assignee: mockUsers[1],
-    status: STATUS_OBJECTS['new'],
+    status: INITIAL_STATUS_OBJECTS['new'],
   },
   {
     id: 3,
@@ -79,6 +95,6 @@ export const mockTasks: TaskEntity[] = [
     title: 'BE - Migrate to AWS S3',
     comments: '',
     assignee: mockUsers[2],
-    status: STATUS_OBJECTS['in-progress'],
+    status: INITIAL_STATUS_OBJECTS['in-progress'],
   },
 ];

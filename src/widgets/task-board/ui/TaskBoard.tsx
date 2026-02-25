@@ -1,7 +1,8 @@
 import type { TaskDto } from '@/shared/api/types/task.dto';
 import { Column } from '@/widgets/column/ui/Column';
 import { TaskDrawer } from '@/widgets/card/ui/TaskDrawer';
-import { STATUS_OBJECTS } from '@/app/store/statusOptions';
+import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux';
+import { selectStatusObjects } from '@/app/store/selectors/statusSelectors';
 import { setActiveTask } from '@/app/store/slices/tasksSlice';
 import {
   selectFilteredBoardData,
@@ -9,12 +10,12 @@ import {
 } from '@/app/store/selectors/boardSelectors';
 import styles from '@/widgets/task-board/ui/TaskBoard.module.css';
 import { HeaderBoard } from '@/widgets/headerBoard/ui/HeaderBoard';
-import { useAppSelector, useAppDispatch } from '@/shared/lib/hooks/redux';
 
 export function TaskBoard() {
   const dispatch = useAppDispatch();
   const boardData = useAppSelector(selectFilteredBoardData);
   const activeTaskInfo = useAppSelector(selectActiveTaskInfo);
+  const statusObjects = useAppSelector(selectStatusObjects);
 
   return (
     <div>
@@ -24,11 +25,8 @@ export function TaskBoard() {
         {boardData.map((column) => (
           <Column
             key={column.alias}
-            columnAlias={column.alias}
-            columnStatus={column.status}
-            variant={STATUS_OBJECTS[column.status]?.variant ?? 'ghost'}
-            tasks={column.tasks as unknown as TaskDto[]}
-            title={column.title}
+            variant={statusObjects[column.status]?.variant ?? statusObjects[column.alias]?.variant ?? 'ghost'}
+            column={column}
           />
         ))}
       </div>

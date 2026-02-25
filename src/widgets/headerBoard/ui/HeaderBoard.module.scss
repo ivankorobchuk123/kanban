@@ -42,6 +42,40 @@
   }
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.addColumnButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border: 1px solid var(--grey-4);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+
+  &:hover {
+    background: var(--grey-2);
+    border-color: var(--grey-5);
+  }
+
+  &:active {
+    opacity: 0.9;
+  }
+
+  .material-icons-outlined {
+    font-size: 20px;
+  }
+}
+
 .newButton {
   display: flex;
   align-items: center;
