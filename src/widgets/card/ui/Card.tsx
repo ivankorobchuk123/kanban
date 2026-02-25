@@ -86,10 +86,10 @@ export function Card({
 
   const handleDelete = async () => {
     const ok = await confirm({
-      title: 'Удалить задачу?',
-      message: 'Вы точно хотите удалить?',
-      confirmText: 'Удалить',
-      cancelText: 'Отмена',
+      title: 'Remove task?',
+      message: 'Are you sure you want to remove this task?',
+      confirmText: 'Remove',
+      cancelText: 'Cancel',
     });
     if (ok) {
       dispatch(removeTask({ columnAlias, taskId }));
@@ -103,12 +103,13 @@ export function Card({
   return (
     <>
       <div
-        className={`${styles.card} ${isDrawerOpen && styles.active}`}
+        className={`${styles.card} ${isDrawerOpen ? styles.active : ''} ${styles[card.status.variant]}`}
         onClick={openDrawer}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => e.key === 'Enter' && openDrawer()}
       >
+        
         <div className={styles.cardContent}>
           <div
             className={`${styles.configCard} ${isEditing && styles.noHover} flex items-center justify-between`}

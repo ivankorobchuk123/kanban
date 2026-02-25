@@ -4,7 +4,8 @@ import { TaskMetadata } from '@/widgets/card/ui/TaskMetadata';
 import { TaskProperties } from '@/widgets/card/ui/TaskProperties';
 import { TaskComment } from '@/widgets/card/ui/TaskComment';
 import { mockUsers, type AssigneeOption } from '@/app/store/mock';
-import { useAppDispatch } from '@/shared/lib/hooks/redux';
+import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux';
+import { addColumn } from '@/app/store/slices/columnsSlice';
 import {
   updateTaskTitle,
   updateTaskAssignee,
@@ -35,12 +36,25 @@ export function TaskDrawer({
   columnAlias,
 }: TaskDrawerProps) {
   const dispatch = useAppDispatch();
+  const columns = useAppSelector((state) => state.columns.columns);
   const taskId = String(task.id);
   const [isClosing, setIsClosing] = useState(false);
   const [localValue, setLocalValue] = useState<string | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const value = localValue ?? task.title;
+
+  const adjustTextareaHeight = useCallback(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.max(el.scrollHeight, 44)}px`;
+  }, []);
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [value, adjustTextareaHeight]);
 
   const handleClose = useCallback(() => {
     if (isClosing) return;
@@ -80,6 +94,16 @@ export function TaskDrawer({
   };
 
   const onStatusChange = (statusOption: StatusOption) => {
+    const hasColumn = columns.some((col) => col.alias === statusOption.id);
+    if (!hasColumn) {
+      dispatch(
+        addColumn({
+          alias: statusOption.id,
+          title: statusOption.label,
+          status: statusOption.id,
+        })
+      );
+    }
     dispatch(
       updateTaskStatus({
         columnAlias,
@@ -93,10 +117,10 @@ export function TaskDrawer({
     );
   };
 
-  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setLocalValue(value);
-    dispatch(updateTaskTitle({ columnAlias, taskId, newTitle: value }));
+  const onTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    setLocalValue(val);
+    dispatch(updateTaskTitle({ columnAlias, taskId, newTitle: val }));
   };
 
 
@@ -111,13 +135,14 @@ export function TaskDrawer({
           <div className={styles.label}>Описание</div>
           <div className={styles.titleInputWrapper}>
             <span className={styles.pinIcon}>📍</span>
-            <input
-              type="text"
+            <textarea
+              ref={textareaRef}
               className={styles.titleInput}
               value={value}
               onChange={onTitleChange}
               onBlur={handleBlur}
               placeholder="New task"
+              rows={1}
             />
           </div>
         </div>

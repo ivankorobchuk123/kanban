@@ -30,11 +30,33 @@
             background-color: var(--brown-2);
         }
     }
+    &.done {
+        background-color: var(--purple-5);
+        color: var(--purple-7);
+        .dot {
+            background-color: var(--purple);
+        }
+    }
     &.danger {
         background-color: var(--red);
         color: #fff;
         .dot {
             background-color: var(--red-6);
+        }
+    }
+    &.blocked {
+        background-color: var(--red-3);
+        color: var(--red-8);
+        .dot {
+            background-color: var(--red-8);
+        }
+    }
+
+    &.canceled {
+        background-color: var(--grey-5);
+        color: var(--grey-7);
+        .dot {
+            background-color: var(--grey-6);
         }
     }
 

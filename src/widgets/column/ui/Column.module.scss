@@ -33,6 +33,24 @@
             color: var(--brown-2);
         }
     }
+    &.done {
+        background-color: var(--purple-1);
+        .count {
+            color: var(--purple-7);
+        }
+    }
+    &.blocked {
+        background-color: var(--red-1);
+        .count {
+            color: var(--red-5);
+        }
+    }
+    &.canceled {
+        background-color: var(--grey-5);
+        .count {
+            color: var(--grey-7);
+        }
+    }
     .cards {
         padding-top: 12px;
     }
