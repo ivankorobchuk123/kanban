@@ -58,14 +58,6 @@ export const mockColumns: ColumnDto[] = [
     order: 2,
     tasks: [],
   },
-  {
-    alias: 'backlog',
-    title: 'Backlog',
-    status: INITIAL_STATUS_OBJECTS['backlog'].id,
-    color: '#e7d8d2',
-    order: 3,
-    tasks: [],
-  },
 ];
 
 export const mockTasks: TaskEntity[] = [

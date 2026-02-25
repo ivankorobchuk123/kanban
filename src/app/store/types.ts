@@ -23,6 +23,7 @@ export const TaskVariant = {
   BACKLOG: 'backlog',
   GHOST: 'ghost',
   DONE: 'done',
+  COMPLETED: 'completed',
   CANCELED: 'canceled',
   BLOCKED: 'blocked',
 } as const;
