@@ -39,10 +39,10 @@ export function ConfirmDialog({
   if (!options) return null;
 
   const {
-    title = 'Подтверждение',
+    title = 'Confirmation',
     message,
-    confirmText = 'Удалить',
-    cancelText = 'Отмена',
+    confirmText = 'Confirm',
+    cancelText = 'Cancel',
   } = options;
 
   const handleOverlayClick = (e: React.MouseEvent) => {

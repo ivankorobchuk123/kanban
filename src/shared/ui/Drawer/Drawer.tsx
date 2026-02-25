@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import styles from './Drawer.module.scss';
 
@@ -10,6 +10,19 @@ interface DrawerProps {
 }
 
 export function Drawer({ isOpen, onClose, title, children }: DrawerProps) {
+  const [isReadyToAnimate, setIsReadyToAnimate] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      const raf = requestAnimationFrame(() => {
+        requestAnimationFrame(() => setIsReadyToAnimate(true));
+      });
+      return () => cancelAnimationFrame(raf);
+    }
+    const id = setTimeout(() => setIsReadyToAnimate(false), 0);
+    return () => clearTimeout(id);
+  }, [isOpen]);
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -28,14 +41,16 @@ export function Drawer({ isOpen, onClose, title, children }: DrawerProps) {
     if (e.target === e.currentTarget) onClose();
   };
 
+  const isVisible = isOpen && isReadyToAnimate;
+
   return (
     <>
       <div
-        className={`${styles.overlay} ${isOpen ? styles.open : ''}`}
+        className={`${styles.overlay} ${isVisible ? styles.open : ''}`}
         onClick={handleOverlayClick}
         aria-hidden={!isOpen}
       />
-      <div className={`${styles.panel} ${isOpen ? styles.open : ''}`} role="dialog" aria-modal="true">
+      <div className={`${styles.panel} ${isVisible ? styles.open : ''}`} role="dialog" aria-modal="true">
         <div className={styles.header}>
           {title && <h2 className={styles.title}>{title}</h2>}
           <button

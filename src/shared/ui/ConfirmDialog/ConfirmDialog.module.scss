@@ -81,11 +81,11 @@
   }
 
   &.confirm {
-    background: var(--red, #ef4444);
-    color: #fff;
+    background: var(--black);
+    color: #ffffff;
 
     &:hover {
-      background: var(--red-6, #dc2626);
+      background: var(--black-2);
     }
   }
 }

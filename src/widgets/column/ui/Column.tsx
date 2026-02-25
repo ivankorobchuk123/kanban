@@ -5,7 +5,8 @@ import type { TaskVariant } from '@/app/store/types';
 import { NewTask } from '@/features/addTask/ui/NewTask';
 import { useConfirm } from '@/shared/ui/ConfirmDialog';
 import { useAppDispatch } from '@/shared/lib/hooks/redux';
-import { deleteColumn } from '@/app/store/slices/tasksSlice';
+import { deleteColumn } from '@/app/store/slices/columnsSlice';
+import { removeTasksByColumn } from '@/app/store/slices/tasksSlice';
 
 import styles from './Column.module.scss';
 
@@ -29,6 +30,7 @@ export function Column({ columnAlias, tasks, variant, title }: ColumnProps) {
     });
     if (ok) {
       dispatch(deleteColumn({ columnAlias }));
+      dispatch(removeTasksByColumn({ columnAlias }));
     }
   };
   return (

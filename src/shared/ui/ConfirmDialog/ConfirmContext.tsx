@@ -25,7 +25,7 @@ export function ConfirmProvider({ children }: { children: ReactNode }) {
     null
   );
   const [isClosing, setIsClosing] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const confirm = useCallback((opts: ConfirmOptions) => {
     return new Promise<boolean>((resolve) => {

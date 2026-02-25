@@ -1,61 +1,18 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { mockUsers } from '@/app/store/mock';
-import { STATUS_OBJECTS } from '@/app/store/statusOptions';
+import { mockTasks } from '@/app/store/mock';
+import {
+  createNewTask,
+  findTaskById,
+  getNextTaskId,
+} from './tasksSlice.helpers';
 
 const initialState = {
+  tasks: mockTasks,
   activeTaskId: null as string | null,
-  tasks: [
-    {
-      alias: 'new',
-      title: 'New',
-      status: STATUS_OBJECTS['new'].id,
-      children: [
-        {
-          title: 'Обновить дизайн поп-апа на подписку',
-          comments: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ips',
-          assignee: mockUsers[0],
-          status: STATUS_OBJECTS['new'],
-          id: 1,
-        },
-        {
-          title: 'Обновить дизайн поп-апа на подписку 2',
-          comments: '',
-          assignee: mockUsers[1],
-          status: STATUS_OBJECTS['new'],
-          id: 2,
-        },
-      ],
-    },
-    {
-      alias: 'in-progress',
-      title: 'In Progress',
-      status: STATUS_OBJECTS['in-progress'].id,
-      children: [
-        {
-          title: 'BE - Migrate to AWS S3',
-          comments: '',
-          assignee: mockUsers[2],
-          status: STATUS_OBJECTS['in-progress'],
-          id: 3,
-        },
-      ],
-    },
-    {
-      alias: 'need-test',
-      title: 'Need Test',
-      status: STATUS_OBJECTS['need-test'].id,
-      children: [],
-    },
-    {
-      alias: 'backlog',
-      title: 'Backlog',
-      status: STATUS_OBJECTS['backlog'].id,
-      children: [],
-    },
-  ],
+  searchQuery: '',
 };
 
-const columnsSlice = createSlice({
+const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
@@ -67,15 +24,8 @@ const columnsSlice = createSlice({
         newTitle: string;
       }>
     ) => {
-      const { columnAlias, taskId, newTitle } = action.payload;
-
-      const column = state.tasks.find((item) => item.alias === columnAlias);
-
-      if (!column?.children) return;
-
-      const task = column.children.find(
-        (item) => String(item.id) === String(taskId)
-      );
+      const { taskId, newTitle } = action.payload;
+      const task = findTaskById(state.tasks, taskId);
       if (task) task.title = newTitle;
     },
 
@@ -83,19 +33,11 @@ const columnsSlice = createSlice({
       state,
       action: PayloadAction<{ columnAlias: string; taskId: string }>
     ) => {
-      const { columnAlias, taskId } = action.payload;
-
-      const column = state.tasks.find((item) => item.alias === columnAlias);
-
-      if (!column?.children) return;
-
+      const { taskId } = action.payload;
+      state.tasks = state.tasks.filter((t) => String(t.id) !== String(taskId));
       if (state.activeTaskId === taskId) {
         state.activeTaskId = null;
       }
-
-      column.children = column.children.filter(
-        (item) => String(item.id) !== String(taskId)
-      );
     },
 
     addTask: (
@@ -103,23 +45,74 @@ const columnsSlice = createSlice({
       action: PayloadAction<{ columnAlias: string; title?: string }>
     ) => {
       const { columnAlias, title = 'New task' } = action.payload;
+      const tasksInColumn = state.tasks.filter(
+        (t) => t.columnAlias === columnAlias
+      );
+      const maxOrder =
+        tasksInColumn.length > 0
+          ? Math.max(...tasksInColumn.map((t) => t.order), -1)
+          : -1;
+      const newId = getNextTaskId(state.tasks);
+      state.tasks.push(
+        createNewTask({
+          id: newId,
+          title,
+          columnAlias,
+          order: maxOrder + 1,
+        })
+      );
+    },
 
-      const column = state.tasks.find((item) => item.alias === columnAlias);
+    addTaskEndAndOpen: (
+      state,
+      action: PayloadAction<{ columnAlias?: string; title?: string }>
+    ) => {
+      const columnAlias = action.payload.columnAlias ?? 'new';
+      const title = action.payload.title ?? 'New task';
 
-      if (!column?.children) return;
+      const tasksInColumn = state.tasks.filter(
+        (t) => t.columnAlias === columnAlias
+      );
+      const maxOrder =
+        tasksInColumn.length > 0
+          ? Math.max(...tasksInColumn.map((t) => t.order), -1)
+          : -1;
+      const newId = getNextTaskId(state.tasks);
+      state.tasks.push(
+        createNewTask({
+          id: newId,
+          title,
+          columnAlias,
+          order: maxOrder + 1,
+        })
+      );
+      state.activeTaskId = String(newId);
+    },
 
-      const maxId = state.tasks.reduce((max, col) => {
-        const ids = (col.children ?? []).map((t: { id?: number }) => t.id ?? 0);
-        return Math.max(max, ...ids, 0);
-      }, 0);
+    addTaskStartAndOpen: (
+      state,
+      action: PayloadAction<{ columnAlias?: string; title?: string }>
+    ) => {
+      const columnAlias = action.payload.columnAlias ?? 'new';
+      const title = action.payload.title ?? 'New task';
 
-      column.children.push({
-        id: maxId + 1,
-        title,
-        comments: '',
-        assignee: mockUsers[0],
-        status: STATUS_OBJECTS[columnAlias as keyof typeof STATUS_OBJECTS],
-      });
+      const tasksInColumn = state.tasks.filter(
+        (t) => t.columnAlias === columnAlias
+      );
+      const minOrder =
+        tasksInColumn.length > 0
+          ? Math.min(...tasksInColumn.map((t) => t.order), 0)
+          : 0;
+      const newId = getNextTaskId(state.tasks);
+      state.tasks.unshift(
+        createNewTask({
+          id: newId,
+          title,
+          columnAlias,
+          order: minOrder - 1,
+        })
+      );
+      state.activeTaskId = String(newId);
     },
 
     updateTaskStatus: (
@@ -127,36 +120,31 @@ const columnsSlice = createSlice({
       action: PayloadAction<{
         columnAlias: string;
         taskId: string;
-        status: { id: string; label: string; variant: import('@/app/store/types').TaskVariant };
+        status: {
+          id: string;
+          label: string;
+          variant: import('@/app/store/types').TaskVariant;
+        };
       }>
     ) => {
-      const { columnAlias, taskId, status } = action.payload;
-
-      const sourceColumn = state.tasks.find((item) => item.alias === columnAlias);
-      if (!sourceColumn?.children) return;
-
-      const taskIndex = sourceColumn.children.findIndex(
-        (item) => String(item.id) === String(taskId)
-      );
-      if (taskIndex === -1) return;
-
-      const [task] = sourceColumn.children.splice(taskIndex, 1);
-      task.status = {
-        id: status.id,
-        label: status.label,
-        variant: status.variant,
-      };
-
-      const targetColumn = state.tasks.find((item) => item.alias === status.id);
-      if (targetColumn?.children) {
-        targetColumn.children.push(task);
-      } else {
-        sourceColumn.children.splice(taskIndex, 0, task);
+      const { taskId, status } = action.payload;
+      const task = findTaskById(state.tasks, taskId);
+      if (task) {
+        task.columnAlias = status.id;
+        task.status = {
+          id: status.id,
+          label: status.label,
+          variant: status.variant,
+        };
       }
     },
 
     setActiveTask: (state, action: PayloadAction<string | null>) => {
       state.activeTaskId = action.payload;
+    },
+
+    setSearchQuery: (state, action: PayloadAction<string>) => {
+      state.searchQuery = action.payload;
     },
 
     updateTaskComments: (
@@ -167,13 +155,44 @@ const columnsSlice = createSlice({
         comments: string;
       }>
     ) => {
-      const { columnAlias, taskId, comments } = action.payload;
-      const column = state.tasks.find((item) => item.alias === columnAlias);
-      if (!column?.children) return;
-      const task = column.children.find(
-        (item) => String(item.id) === String(taskId)
-      );
+      const { taskId, comments } = action.payload;
+      const task = findTaskById(state.tasks, taskId);
       if (task) task.comments = comments;
+    },
+
+    removeTaskById: (state, action: PayloadAction<string>) => {
+      const taskId = action.payload;
+      state.tasks = state.tasks.filter((t) => String(t.id) !== String(taskId));
+      if (state.activeTaskId === taskId) state.activeTaskId = null;
+    },
+
+    toggleTaskComplete: (state, action: PayloadAction<string>) => {
+      const task = findTaskById(state.tasks, action.payload);
+      if (task && 'completed' in task) {
+        (task as { completed?: boolean }).completed = !(task as { completed?: boolean }).completed;
+      }
+    },
+
+    updateTaskText: (
+      state,
+      action: PayloadAction<{ id: string; text: string }>
+    ) => {
+      const task = findTaskById(state.tasks, action.payload.id);
+      if (task) (task as { title?: string }).title = action.payload.text;
+    },
+
+    removeTasksByColumn: (
+      state,
+      action: PayloadAction<{ columnAlias: string }>
+    ) => {
+      const { columnAlias } = action.payload;
+      if (state.activeTaskId) {
+        const activeTask = findTaskById(state.tasks, state.activeTaskId);
+        if (activeTask?.columnAlias === columnAlias) {
+          state.activeTaskId = null;
+        }
+      }
+      state.tasks = state.tasks.filter((t) => t.columnAlias !== columnAlias);
     },
 
     updateTaskAssignee: (
@@ -181,19 +200,16 @@ const columnsSlice = createSlice({
       action: PayloadAction<{
         columnAlias: string;
         taskId: string;
-        assignee: { id: string; name: string; src?: string; avatarSrc?: string };
+        assignee: {
+          id: string;
+          name: string;
+          src?: string;
+          avatarSrc?: string;
+        };
       }>
     ) => {
-      const { columnAlias, taskId, assignee } = action.payload;
-
-      const column = state.tasks.find((item) => item.alias === columnAlias);
-
-      if (!column?.children) return;
-
-      const task = column.children.find(
-        (item) => String(item.id) === String(taskId)
-      );
-
+      const { taskId, assignee } = action.payload;
+      const task = findTaskById(state.tasks, taskId);
       if (task) {
         task.assignee = {
           id: assignee.id,
@@ -202,22 +218,23 @@ const columnsSlice = createSlice({
         };
       }
     },
-
-    deleteColumn: (state, action: PayloadAction<{ columnAlias: string }>) => {
-      const { columnAlias } = action.payload;
-      state.tasks = state.tasks.filter((item) => item.alias !== columnAlias);
-    },
   },
 });
 
 export const {
   updateTaskTitle,
   removeTask,
+  removeTaskById,
+  toggleTaskComplete,
+  updateTaskText,
   addTask,
+  addTaskEndAndOpen,
+  addTaskStartAndOpen,
   updateTaskAssignee,
   updateTaskStatus,
-  deleteColumn,
   updateTaskComments,
+  removeTasksByColumn,
   setActiveTask,
-} = columnsSlice.actions;
-export default columnsSlice.reducer;
+  setSearchQuery,
+} = tasksSlice.actions;
+export default tasksSlice.reducer;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Drawer } from '@/shared/ui/Drawer';
 import { TaskMetadata } from '@/widgets/card/ui/TaskMetadata';
 import { TaskProperties } from '@/widgets/card/ui/TaskProperties';
@@ -25,6 +25,8 @@ interface TaskDrawerProps {
   columnAlias: string;
 }
 
+const DRAWER_CLOSE_DURATION = 350;
+
 export function TaskDrawer({
   isOpen,
   onClose,
@@ -34,10 +36,26 @@ export function TaskDrawer({
 }: TaskDrawerProps) {
   const dispatch = useAppDispatch();
   const taskId = String(task.id);
-
+  const [isClosing, setIsClosing] = useState(false);
   const [localValue, setLocalValue] = useState<string | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const value = localValue ?? task.title;
+
+  const handleClose = useCallback(() => {
+    if (isClosing) return;
+    setIsClosing(true);
+    timeoutRef.current = setTimeout(() => {
+      setLocalValue(null);
+      onClose();
+    }, DRAWER_CLOSE_DURATION);
+  }, [isClosing, onClose]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleBlur = () => {
     const trimmed = value.trim();
@@ -45,11 +63,6 @@ export function TaskDrawer({
       dispatch(updateTaskTitle({ columnAlias, taskId, newTitle: trimmed }));
     }
     setLocalValue(null);
-  };
-
-  const handleClose = () => {
-    setLocalValue(null);
-    onClose();
   };
 
   const onAssigneeChange = (assigneeOption: AssigneeOption) => {
@@ -92,7 +105,7 @@ export function TaskDrawer({
   };
 
   return (
-    <Drawer isOpen={isOpen} onClose={handleClose} title={taskNumber}>
+    <Drawer isOpen={isOpen && !isClosing} onClose={handleClose} title={taskNumber}>
       <div className={styles.content}>
         <div className={styles.section}>
           <div className={styles.label}>Описание</div>

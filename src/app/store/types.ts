@@ -16,13 +16,15 @@ export interface Column {
 export type TaskFilter = 'all' | 'completed' | 'incomplete'
 
 
-export enum TaskVariant {
-  PRIMARY = 'primary',
-  SECONDARY = 'secondary',
-  DANGER = 'danger',
-  BACKLOG = 'backlog',
-  GHOST = 'ghost',
-  DONE = 'done',
-  CANCELED = 'canceled',
-  BLOCKED = 'blocked',
-}
+export const TaskVariant = {
+  PRIMARY: 'primary',
+  SECONDARY: 'secondary',
+  DANGER: 'danger',
+  BACKLOG: 'backlog',
+  GHOST: 'ghost',
+  DONE: 'done',
+  CANCELED: 'canceled',
+  BLOCKED: 'blocked',
+} as const;
+
+export type TaskVariant = (typeof TaskVariant)[keyof typeof TaskVariant];

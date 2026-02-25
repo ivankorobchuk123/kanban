@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { Checkbox } from '@/shared/ui/Checkbox'
 import { Button } from '@/shared/ui/Button'
 import { useAppDispatch } from '@/shared/lib/hooks/redux'
-import { toggleTaskComplete, updateTaskText, removeTask } from '@/app/store/slices/tasksSlice'
+import { toggleTaskComplete, updateTaskText, removeTaskById } from '@/app/store/slices/tasksSlice'
 import { toggleTaskSelection } from '@/app/store/slices/selectionSlice'
 import { getHighlightRanges } from '@/shared/lib/search/fuzzyMatch'
 
@@ -73,7 +73,7 @@ export function TaskCard({ task, searchQuery, isSelected, dragHandleRef }: TaskC
   }
 
   const handleDelete = () => {
-    dispatch(removeTask(task.id))
+    dispatch(removeTaskById(String(task.id)))
   }
 
   const renderText = () => {
