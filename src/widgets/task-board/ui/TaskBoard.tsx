@@ -25,6 +25,7 @@ export function TaskBoard() {
           <Column
             key={column.alias}
             columnAlias={column.alias}
+            columnStatus={column.status}
             variant={STATUS_OBJECTS[column.status]?.variant ?? 'ghost'}
             tasks={column.tasks as unknown as TaskDto[]}
             title={column.title}

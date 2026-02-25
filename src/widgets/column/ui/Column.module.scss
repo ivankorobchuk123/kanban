@@ -53,9 +53,16 @@
     }
     .cards {
         padding-top: 12px;
+        min-height: 60px;
     }
     .wrapBadge {
         padding-left: 3px;
+    }
+    .columnDragHandle {
+        cursor: grab;
+        &:active {
+            cursor: grabbing;
+        }
     }
 
     .count {

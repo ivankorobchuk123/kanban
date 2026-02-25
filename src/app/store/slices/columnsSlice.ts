@@ -31,8 +31,28 @@ const columnsSlice = createSlice({
       const { columnAlias } = action.payload;
       state.columns = state.columns.filter((col) => col.alias !== columnAlias);
     },
+
+    reorderColumn: (
+      state,
+      action: PayloadAction<{ columnAlias: string; targetColumnAlias: string }>
+    ) => {
+      const { columnAlias, targetColumnAlias } = action.payload;
+      if (columnAlias === targetColumnAlias) return;
+
+      const sorted = [...state.columns].sort((a, b) => a.order - b.order);
+      const fromIdx = sorted.findIndex((c) => c.alias === columnAlias);
+      const toIdx = sorted.findIndex((c) => c.alias === targetColumnAlias);
+      if (fromIdx < 0 || toIdx < 0) return;
+
+      const [removed] = sorted.splice(fromIdx, 1);
+      sorted.splice(toIdx, 0, removed);
+
+      sorted.forEach((col, i) => {
+        col.order = i;
+      });
+    },
   },
 });
 
-export const { addColumn, deleteColumn } = columnsSlice.actions;
+export const { addColumn, deleteColumn, reorderColumn } = columnsSlice.actions;
 export default columnsSlice.reducer;

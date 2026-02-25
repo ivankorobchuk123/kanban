@@ -139,6 +139,29 @@ const tasksSlice = createSlice({
       }
     },
 
+    moveTask: (
+      state,
+      action: PayloadAction<{
+        taskId: string;
+        fromColumnAlias: string;
+        toColumnAlias: string;
+        status: {
+          id: string;
+          label: string;
+          variant: import('@/app/store/types').TaskVariant;
+        };
+      }>
+    ) => {
+      const { taskId, toColumnAlias, status } = action.payload;
+      const task = findTaskById(state.tasks, taskId);
+      if (!task) return;
+      task.columnAlias = toColumnAlias;
+      task.status = status;
+      const tasksInColumn = state.tasks.filter((t) => t.columnAlias === toColumnAlias);
+      const maxOrder = tasksInColumn.length > 0 ? Math.max(...tasksInColumn.map((t) => t.order), -1) : -1;
+      task.order = maxOrder + 1;
+    },
+
     setActiveTask: (state, action: PayloadAction<string | null>) => {
       state.activeTaskId = action.payload;
     },
@@ -232,6 +255,7 @@ export const {
   addTaskStartAndOpen,
   updateTaskAssignee,
   updateTaskStatus,
+  moveTask,
   updateTaskComments,
   removeTasksByColumn,
   setActiveTask,

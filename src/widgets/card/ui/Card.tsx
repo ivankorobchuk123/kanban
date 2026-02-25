@@ -4,6 +4,7 @@ import { Avatar } from '@/shared/ui/Avatar';
 import { useConfirm } from '@/shared/ui/ConfirmDialog';
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux';
 import { updateTaskTitle, removeTask, setActiveTask } from '@/app/store/slices/tasksSlice';
+import { useTaskDraggable } from '@/shared/lib/dnd/useTaskDraggable';
 
 import styles from '@/widgets/card/ui/Card.module.scss';
 import type { TaskDto } from '@/shared/api/types/task.dto';
@@ -30,6 +31,9 @@ export function Card({
   const [editValue, setEditValue] = useState(title);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useTaskDraggable(cardRef, cardRef, taskId, columnAlias);
 
   useEffect(() => {
     setEditValue(title);
@@ -103,6 +107,7 @@ export function Card({
   return (
     <>
       <div
+        ref={cardRef}
         className={`${styles.card} ${isDrawerOpen ? styles.active : ''} ${styles[card.status.variant]}`}
         onClick={openDrawer}
         role="button"

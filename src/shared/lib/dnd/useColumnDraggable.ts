@@ -1,14 +1,10 @@
-/**
- * Hook for making a task draggable using pragmatic-drag-and-drop.
- */
 import { useEffect } from 'react'
 
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 
-export function useTaskDraggable(
+export function useColumnDraggable(
   elementRef: React.RefObject<HTMLElement | null>,
   dragHandleRef: React.RefObject<HTMLElement | null>,
-  taskId: string,
   columnAlias: string
 ) {
   useEffect(() => {
@@ -20,10 +16,9 @@ export function useTaskDraggable(
       element: el,
       dragHandle: handle ?? undefined,
       getInitialData: () => ({
-        taskId,
         columnAlias,
-        type: 'task',
+        type: 'column',
       }),
     })
-  }, [elementRef, dragHandleRef, taskId, columnAlias])
+  }, [elementRef, dragHandleRef, columnAlias])
 }
