@@ -22,4 +22,7 @@ export enum TaskVariant {
   DANGER = 'danger',
   BACKLOG = 'backlog',
   GHOST = 'ghost',
+  DONE = 'done',
+  CANCELED = 'canceled',
+  BLOCKED = 'blocked',
 }

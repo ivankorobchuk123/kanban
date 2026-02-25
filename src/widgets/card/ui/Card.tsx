@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Avatar } from '@/shared/ui/Avatar';
+import { useConfirm } from '@/shared/ui/ConfirmDialog';
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux';
 import { updateTaskTitle, removeTask, setActiveTask } from '@/app/store/slices/tasksSlice';
 
@@ -19,8 +20,9 @@ export function Card({
   taskNumber = 'REC-1987',
   card,
   columnAlias,
-}: CardProps) {
+}: CardProps): React.ReactElement {
   const dispatch = useAppDispatch();
+  const confirm = useConfirm();
   const taskId = String(card.id);
   const activeTaskId = useAppSelector((state) => state.tasks.activeTaskId);
   const isDrawerOpen = activeTaskId === taskId;
@@ -82,8 +84,16 @@ export function Card({
     }
   };
 
-  const handleDelete = () => {
-    dispatch(removeTask({ columnAlias, taskId }));
+  const handleDelete = async () => {
+    const ok = await confirm({
+      title: 'Удалить задачу?',
+      message: 'Вы точно хотите удалить?',
+      confirmText: 'Удалить',
+      cancelText: 'Отмена',
+    });
+    if (ok) {
+      dispatch(removeTask({ columnAlias, taskId }));
+    }
   };
 
   const openDrawer = () => {

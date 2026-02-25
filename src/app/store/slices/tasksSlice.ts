@@ -202,6 +202,11 @@ const columnsSlice = createSlice({
         };
       }
     },
+
+    deleteColumn: (state, action: PayloadAction<{ columnAlias: string }>) => {
+      const { columnAlias } = action.payload;
+      state.tasks = state.tasks.filter((item) => item.alias !== columnAlias);
+    },
   },
 });
 
@@ -211,6 +216,7 @@ export const {
   addTask,
   updateTaskAssignee,
   updateTaskStatus,
+  deleteColumn,
   updateTaskComments,
   setActiveTask,
 } = columnsSlice.actions;

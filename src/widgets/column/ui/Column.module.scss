@@ -46,4 +46,16 @@
         color: var(--grey-6);
         padding-left: 8px;
     }
+
+    .icon {
+        display: flex;
+        padding: 0 2px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--grey-6);
+        span {
+            font-size: 18px;
+        }
+    }
 }
