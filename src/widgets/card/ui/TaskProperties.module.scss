@@ -45,6 +45,14 @@
   cursor: pointer;
 }
 
+.statusWrapper {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .executorAvatar {
   border: 2px solid var(--orange-6);
 }

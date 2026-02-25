@@ -22,7 +22,14 @@
             background-color: var(--yellow-7);
         }
     }
-    
+
+    &.backlog {
+        background-color: var(--brown-3);
+        color: var(--brown);
+        .dot {
+            background-color: var(--brown-2);
+        }
+    }
     &.danger {
         background-color: var(--red);
         color: #fff;

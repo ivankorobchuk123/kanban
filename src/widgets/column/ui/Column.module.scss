@@ -27,6 +27,12 @@
             color: var(--grey-6);
         }
     }
+    &.backlog {
+        background-color: var(--brown-4);
+        .count {
+            color: var(--brown-2);
+        }
+    }
     .cards {
         padding-top: 12px;
     }

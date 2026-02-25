@@ -20,5 +20,6 @@ export enum TaskVariant {
   PRIMARY = 'primary',
   SECONDARY = 'secondary',
   DANGER = 'danger',
+  BACKLOG = 'backlog',
   GHOST = 'ghost',
 }

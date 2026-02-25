@@ -1,14 +1,9 @@
-export enum TaskAlias {
-    NEW = 'new',
-    IN_PROGRESS = 'in-progress',
-    DONE = 'done',
-}
-
+import type { StatusOption } from '@/app/store/statusOptions';
 
 export interface TaskDto {
     id: number | string
     title: string
-    variant: 'primary' | 'secondary' | 'danger' | 'ghost'
+    status: StatusOption
     assignee?: {
         name: string
         src: string

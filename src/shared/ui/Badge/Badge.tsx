@@ -1,16 +1,18 @@
 import styles from './Badge.module.scss';
-import type { TaskVariant } from '@/app/store/types';
+
 
 
 interface BadgeProps {
   children: React.ReactNode;
-  variant: TaskVariant;
+  variant: string;
+  showDot?: boolean;
+  className?: string;
 }
 
-export function Badge({ children, variant }: BadgeProps) {
-    return <div className={`${styles.badge} ${styles[variant]}`}>
+export function Badge({ children, variant, showDot = true, className = '' }: BadgeProps) {
+    return <div className={`${styles.badge} ${styles[variant]} ${className}`.trim()}>
         <div className="flex items-center gap-1">
-            <div className={styles.dot}></div>
+            {showDot && <div className={styles.dot}></div>}
             <span className={styles.badgeText}>{children}</span>
         </div>
     </div>

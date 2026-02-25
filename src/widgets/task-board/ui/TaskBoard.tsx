@@ -2,7 +2,7 @@ import styles from '@/widgets/task-board/ui/TaskBoard.module.css';
 import { Column } from '@/widgets/column/ui/Column';
 import { useAppSelector } from '@/shared/lib/hooks/redux';
 import type { TaskDto } from '@/shared/api/types/task.dto';
-import type { TaskVariant } from '@/app/store/types';
+import { STATUS_OBJECTS } from '@/app/store/statusOptions';
 
 export function TaskBoard() {
   const tasks = useAppSelector((state) => state.tasks.tasks);
@@ -16,7 +16,7 @@ export function TaskBoard() {
                 <Column
                     key={task.alias}
                     columnAlias={task.alias}
-                    variant={task.variant as TaskVariant}
+                    variant={STATUS_OBJECTS[task.status].variant}
                     tasks={task.children as unknown as TaskDto[]}
                     title={task.title}
                 />

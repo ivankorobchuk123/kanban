@@ -7,8 +7,6 @@ import { NewTask } from '@/features/addTask/ui/NewTask';
 import styles from './Column.module.scss';
 
 
-
-
 interface ColumnProps {
   columnAlias: string;
   tasks: TaskDto[];

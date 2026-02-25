@@ -4,7 +4,12 @@ import { TaskMetadata } from '@/widgets/card/ui/TaskMetadata';
 import { TaskProperties } from '@/widgets/card/ui/TaskProperties';
 import { mockUsers, type AssigneeOption } from '@/app/store/mock';
 import { useAppDispatch } from '@/shared/lib/hooks/redux';
-import { updateTaskTitle, updateTaskAssignee } from '@/app/store/slices/tasksSlice';
+import {
+  updateTaskTitle,
+  updateTaskAssignee,
+  updateTaskStatus,
+} from '@/app/store/slices/tasksSlice';
+import type { StatusOption } from '@/app/store/statusOptions';
 
 import styles from './TaskDrawer.module.scss';
 import type { TaskDto } from '@/shared/api/types/task.dto';
@@ -47,16 +52,30 @@ export function TaskDrawer({
 
   const onAssigneeChange = (assigneeOption: AssigneeOption) => {
     dispatch(
-        updateTaskAssignee({
-          columnAlias,
-          taskId,
-          assignee: {
-            id: String(assigneeOption.id),
-            name: assigneeOption.name,
-            src: assigneeOption.src ?? '',
-          },
-        })
-      );
+      updateTaskAssignee({
+        columnAlias,
+        taskId,
+        assignee: {
+          id: String(assigneeOption.id),
+          name: assigneeOption.name,
+          src: assigneeOption.src ?? '',
+        },
+      })
+    );
+  };
+
+  const onStatusChange = (statusOption: StatusOption) => {
+    dispatch(
+      updateTaskStatus({
+        columnAlias,
+        taskId,
+        status: {
+          id: statusOption.id,
+          label: statusOption.label,
+          variant: statusOption.variant,
+        },
+      })
+    );
   };
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,9 +107,11 @@ export function TaskDrawer({
         <div className={styles.section}>
           <div className={styles.propertiesHeader}>Properties</div>
           <TaskProperties
-            assignee={task.assignee}
+            assignee={task.assignee as AssigneeOption}
             users={mockUsers}
             onAssigneeChange={onAssigneeChange}
+            status={task.status}
+            onStatusChange={onStatusChange}
           />
         </div>
       </div>
