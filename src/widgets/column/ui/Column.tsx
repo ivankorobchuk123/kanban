@@ -10,12 +10,14 @@ import styles from './Column.module.scss';
 
 
 interface ColumnProps {
+  columnAlias: string;
   tasks: TaskDto[];
   variant: TaskVariant;
   title: string;
+  onTaskTitleChange?: (columnAlias: string, taskId: string, newTitle: string) => void;
 }
 
-export function Column({ tasks, variant, title }: ColumnProps) {
+export function Column({ columnAlias, tasks, variant, title, onTaskTitleChange }: ColumnProps) {
 
 
   return (
@@ -29,7 +31,15 @@ export function Column({ tasks, variant, title }: ColumnProps) {
         <div className={styles.cards}>
         {
             tasks.map((card) => (
-                <Card key={card.id} title={card.title} />
+                <Card
+                    key={card.id}
+                    title={card.title}
+                    onTitleChange={
+                        onTaskTitleChange
+                            ? (newTitle) => onTaskTitleChange(columnAlias, String(card.id), newTitle)
+                            : undefined
+                    }
+                />
             ))
         }
         </div>

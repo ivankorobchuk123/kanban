@@ -1,7 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import type { TaskDto } from '@/shared/api/types/task.dto';
-
 
 const initialState = {
     tasks: [
@@ -44,13 +42,17 @@ const columnsSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    addTask: (state, action: PayloadAction<TaskDto>) => {
-      console.log(action.payload)
+    updateTaskTitle: (state, action: PayloadAction<{ columnAlias: string; taskId: string; newTitle: string }>) => {
+      const { columnAlias, taskId, newTitle } = action.payload;
+      const column = state.tasks.find((c) => c.alias === columnAlias);
+      if (!column?.children) return;
+      const task = column.children.find((t) => String(t.id) === String(taskId));
+      if (task) task.title = newTitle;
     },
   },
 })
 
 export const {
-    addTask,
+    updateTaskTitle,
 } = columnsSlice.actions
 export default columnsSlice.reducer
