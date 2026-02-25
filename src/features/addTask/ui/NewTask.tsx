@@ -1,8 +1,18 @@
+import { useAppDispatch } from '@/shared/lib/hooks/redux';
+import { addTask } from '@/app/store/slices/tasksSlice';
+
 import styles from './NewTask.module.scss';
 
-export function NewTask({ className = '' }: { className?: string }) {
+interface NewTaskProps {
+  className?: string;
+  columnAlias: string;
+}
+
+export function NewTask({ className = '', columnAlias }: NewTaskProps) {
+  const dispatch = useAppDispatch();
+
   const handleAddTask = () => {
-    console.log('add task');
+    dispatch(addTask({ columnAlias }));
   };
 
   return (

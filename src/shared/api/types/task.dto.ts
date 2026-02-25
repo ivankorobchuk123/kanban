@@ -6,9 +6,13 @@ export enum TaskAlias {
 
 
 export interface TaskDto {
-    id: string
+    id: number | string
     title: string
     variant: 'primary' | 'secondary' | 'danger' | 'ghost'
+    assignee?: {
+        name: string
+        src: string
+    }
 }
 
 export interface BoardDto {

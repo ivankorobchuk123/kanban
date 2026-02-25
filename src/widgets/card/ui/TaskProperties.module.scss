@@ -1,0 +1,50 @@
+.propertiesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.propertyRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.propertyLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 270px;
+  font-size: 13px;
+  color: var(--grey-6);
+
+  .material-icons-outlined {
+    font-size: 18px;
+    color: var(--grey-6);
+  }
+}
+
+.propertyValue {
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.propertyValueEmpty {
+  font-size: 14px;
+  color: var(--grey-6);
+}
+
+.propertyExecutor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.executorWrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.executorAvatar {
+  border: 2px solid var(--orange-6);
+}

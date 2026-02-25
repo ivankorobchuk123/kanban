@@ -14,10 +14,14 @@ interface ColumnProps {
   tasks: TaskDto[];
   variant: TaskVariant;
   title: string;
-  onTaskTitleChange?: (columnAlias: string, taskId: string, newTitle: string) => void;
 }
 
-export function Column({ columnAlias, tasks, variant, title, onTaskTitleChange }: ColumnProps) {
+export function Column({
+  columnAlias,
+  tasks,
+  variant,
+  title,
+}: ColumnProps) {
 
 
   return (
@@ -26,24 +30,22 @@ export function Column({ columnAlias, tasks, variant, title, onTaskTitleChange }
             <Badge variant={variant}>
                 {title}
             </Badge>
-            <span></span>
+            <span className={styles.count}>{tasks.length}</span>
         </div>
         <div className={styles.cards}>
         {
             tasks.map((card) => (
                 <Card
                     key={card.id}
+                    card={card}
                     title={card.title}
-                    onTitleChange={
-                        onTaskTitleChange
-                            ? (newTitle) => onTaskTitleChange(columnAlias, String(card.id), newTitle)
-                            : undefined
-                    }
+                    taskNumber={`RAC-${card.id}`}
+                    columnAlias={columnAlias}
                 />
             ))
         }
         </div>
-        <NewTask className={variant} />
+        <NewTask className={variant} columnAlias={columnAlias} />
     </div>
   )
 }

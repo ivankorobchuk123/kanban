@@ -1,0 +1,71 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--grey-6);
+  text-transform: uppercase;
+}
+
+.text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text);
+  white-space: pre-wrap;
+}
+
+.titleInputWrapper {
+
+
+}
+
+.pinIcon {
+  font-size: 37px;
+  line-height: 1;
+  flex-shrink: 0;
+  display: block;
+
+}
+
+.titleInput {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+  font-family: inherit;
+
+  &::placeholder {
+    color: var(--grey-5);
+    font-weight: 800;
+    font-size: 32px;
+  }
+}
+
+.assignee {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.propertiesHeader {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+

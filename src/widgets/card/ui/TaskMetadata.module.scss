@@ -1,0 +1,35 @@
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 32px;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metaLabel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--grey-6);
+
+  .material-icons-outlined {
+    font-size: 14px;
+  }
+}
+
+.metaValue {
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.metaCreator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

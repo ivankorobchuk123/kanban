@@ -1,103 +1,125 @@
 .card {
-    display: flex;
-    border: 1px solid var(--grey-3);
-    border-radius: 10px;
-    background-color: #ffffff;
-    margin-bottom: 8px;
-    padding: 9px 10px;
-    min-height: 95px;
+  display: flex;
+  border: 1px solid var(--grey-3);
+  border-radius: 10px;
+  background-color: #ffffff;
+  margin-bottom: 8px;
+  padding: 9px 10px;
+  min-height: 95px;
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+  &.active {
+    border-color: var(--blue-5);
+    box-shadow: 0 0 0 1px var(--blue-5);
+  }
+  &:hover {
+    .configCard {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  .cardContent {
     width: 100%;
-    position: relative;
-    &:hover {
-        .editIcon {
-            opacity: 1;
-            visibility: visible;
-        }
-    }
-    .cardContent {
-        width: 100%;
-    }
-    .title {
-        font-size: var(--font-size-sm);
-        font-weight: 700;
-        color: var(--color-text);
-        line-height: 1.5;
-        font-size: 14px;
-        width: 100%;
-        
-        .icon {
-            font-size: 18px;
-            margin-right: 9px;
-        }
-        .titleText {
-            outline: none;
-            min-width: 0;
-            flex: 1;
-            pointer-events: none;
-            cursor: default;
-            white-space: pre-wrap;
-        }
+  }
+  .title {
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.5;
+    font-size: 14px;
+    width: 100%;
 
-        .titleInput {
-            flex: 1;
-            min-width: 0;
-            min-height: 1.5em;
-            padding: 0;
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: inherit;
-            font-weight: inherit;
-            color: inherit;
-            font-family: inherit;
-            resize: none;
-            line-height: 1.5;
-            overflow: hidden;
-        }
+    .icon {
+      font-size: 18px;
+      margin-right: 9px;
     }
-    .taskNumber {
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--grey-6);
-        line-height: 1.5;
-        padding-top: 8px;
+    .titleText {
+      outline: none;
+      min-width: 0;
+      flex: 1;
+      pointer-events: none;
+      cursor: default;
+      white-space: pre-wrap;
     }
-    .user {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding-top: 8px;
-        margin-top: auto;
+
+    .titleInput {
+      flex: 1;
+      min-width: 0;
+      min-height: 1.5em;
+      padding: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: inherit;
+      font-weight: inherit;
+      color: inherit;
+      font-family: inherit;
+      resize: none;
+      line-height: 1.5;
+      overflow: hidden;
+      &::placeholder {
+        color: var(--grey-5);
+      }
     }
-    .userName {
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--grey-6);
+  }
+  .taskNumber {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--grey-6);
+    line-height: 1.5;
+    padding-top: 8px;
+  }
+  .user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 8px;
+    margin-top: auto;
+  }
+  .userName {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--grey-6);
+  }
+  .configCard {
+    position: absolute;
+    top: 11px;
+    right: 10px;
+    border: 1px solid var(--border);
+    color: var(--grey-6);
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-in-out;
+    &.noHover {
+      opacity: 0 !important;
+      visibility: hidden !important;
     }
-    .editIcon {
-        position: absolute;
-        top: 11px;
-        right: 10px;
-        border: 1px solid var(--border);
-        color: var(--grey-6);
-        cursor: pointer;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 4px;
-        background-color: #ffffff;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.2s ease-in-out;
-        &:hover {
-            color: var(--grey-7);
-        }
-        span {
-            font-size: 13px;
-        }
+    .icon {
+      width: 20px;
+      height: 20px;
+      color: var(--grey-6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background-color: #ffffff;
+
+      &:hover {
+        color: var(--grey-7);
+      }
+      &:first-child {
+        border-right: 1px solid var(--border);
+      }
+      &:last-child {
+        background-color: var(--red-2);
+      }
+      span {
+        font-size: 13px;
+      }
     }
+  }
 }
-
-
