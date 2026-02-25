@@ -159,6 +159,23 @@ const columnsSlice = createSlice({
       state.activeTaskId = action.payload;
     },
 
+    updateTaskComments: (
+      state,
+      action: PayloadAction<{
+        columnAlias: string;
+        taskId: string;
+        comments: string;
+      }>
+    ) => {
+      const { columnAlias, taskId, comments } = action.payload;
+      const column = state.tasks.find((item) => item.alias === columnAlias);
+      if (!column?.children) return;
+      const task = column.children.find(
+        (item) => String(item.id) === String(taskId)
+      );
+      if (task) task.comments = comments;
+    },
+
     updateTaskAssignee: (
       state,
       action: PayloadAction<{
@@ -194,6 +211,7 @@ export const {
   addTask,
   updateTaskAssignee,
   updateTaskStatus,
+  updateTaskComments,
   setActiveTask,
 } = columnsSlice.actions;
 export default columnsSlice.reducer;

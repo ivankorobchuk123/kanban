@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { Drawer } from '@/shared/ui/Drawer';
 import { TaskMetadata } from '@/widgets/card/ui/TaskMetadata';
 import { TaskProperties } from '@/widgets/card/ui/TaskProperties';
+import { TaskComment } from '@/widgets/card/ui/TaskComment';
 import { mockUsers, type AssigneeOption } from '@/app/store/mock';
 import { useAppDispatch } from '@/shared/lib/hooks/redux';
 import {
   updateTaskTitle,
   updateTaskAssignee,
   updateTaskStatus,
+  updateTaskComments,
 } from '@/app/store/slices/tasksSlice';
 import type { StatusOption } from '@/app/store/statusOptions';
 
@@ -84,6 +86,11 @@ export function TaskDrawer({
     dispatch(updateTaskTitle({ columnAlias, taskId, newTitle: value }));
   };
 
+
+  const onCommentsChange = (comments: string) => {
+    dispatch(updateTaskComments({ columnAlias, taskId, comments }));
+  };
+
   return (
     <Drawer isOpen={isOpen} onClose={handleClose} title={taskNumber}>
       <div className={styles.content}>
@@ -112,6 +119,14 @@ export function TaskDrawer({
             onAssigneeChange={onAssigneeChange}
             status={task.status}
             onStatusChange={onStatusChange}
+          />
+        </div>
+        <div className={styles.section}>
+          <div className={styles.propertiesHeader}>Comments</div>
+          <TaskComment
+            text={task.comments ?? ''}
+            onSave={onCommentsChange}
+            placeholder="Add a comment..."
           />
         </div>
       </div>

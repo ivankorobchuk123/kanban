@@ -4,6 +4,7 @@ export interface TaskDto {
     id: number | string
     title: string
     status: StatusOption
+    comments?: string
     assignee?: {
         name: string
         src: string

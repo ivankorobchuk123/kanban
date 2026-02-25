@@ -1,0 +1,36 @@
+.comment {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.commentAuthor {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--grey-6);
+}
+
+.commentText {
+  width: 100%;
+  min-height: 60px;
+  padding: 8px 12px;
+  border: 1px solid var(--grey-4);
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text);
+  font-family: inherit;
+  resize: vertical;
+
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &::placeholder {
+    color: var(--grey-5);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--blue-5);
+    background: #fff;
+  }
+}

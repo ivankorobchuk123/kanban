@@ -30,7 +30,7 @@ export function TaskBoard() {
 
   return (
     <div>
-      <div className={styles.title}>Rac: Tasks</div>
+      <div className={styles.title}>Rec: Tasks</div>
       <div className={`${styles.board} flex`}>
         {tasks.map((task) => (
           <Column
@@ -47,7 +47,7 @@ export function TaskBoard() {
         <TaskDrawer
           isOpen
           onClose={() => dispatch(setActiveTask(null))}
-          taskNumber={`RAC-${activeTaskInfo.task.id}`}
+          taskNumber={`REC-${activeTaskInfo.task.id}`}
           task={activeTaskInfo.task}
           columnAlias={activeTaskInfo.columnAlias}
         />

@@ -37,7 +37,7 @@ export function Column({
                     key={card.id}
                     card={card}
                     title={card.title}
-                    taskNumber={`RAC-${card.id}`}
+                    taskNumber={`REC-${card.id}`}
                     columnAlias={columnAlias}
                 />
             ))
