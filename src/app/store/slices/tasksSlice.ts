@@ -3,7 +3,7 @@ import { mockUsers } from '@/app/store/mock';
 import { STATUS_OBJECTS } from '@/app/store/statusOptions';
 
 const initialState = {
-  isActiveCard: null,
+  activeTaskId: null as string | null,
   tasks: [
     {
       alias: 'new',
@@ -89,6 +89,10 @@ const columnsSlice = createSlice({
 
       if (!column?.children) return;
 
+      if (state.activeTaskId === taskId) {
+        state.activeTaskId = null;
+      }
+
       column.children = column.children.filter(
         (item) => String(item.id) !== String(taskId)
       );
@@ -151,6 +155,10 @@ const columnsSlice = createSlice({
       }
     },
 
+    setActiveTask: (state, action: PayloadAction<string | null>) => {
+      state.activeTaskId = action.payload;
+    },
+
     updateTaskAssignee: (
       state,
       action: PayloadAction<{
@@ -186,5 +194,6 @@ export const {
   addTask,
   updateTaskAssignee,
   updateTaskStatus,
+  setActiveTask,
 } = columnsSlice.actions;
 export default columnsSlice.reducer;

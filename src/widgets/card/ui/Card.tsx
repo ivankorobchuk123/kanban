@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Avatar } from '@/shared/ui/Avatar';
-import { TaskDrawer } from '@/widgets/card/ui/TaskDrawer';
-import { useAppDispatch } from '@/shared/lib/hooks/redux';
-import { updateTaskTitle, removeTask } from '@/app/store/slices/tasksSlice';
+import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux';
+import { updateTaskTitle, removeTask, setActiveTask } from '@/app/store/slices/tasksSlice';
 
 import styles from '@/widgets/card/ui/Card.module.scss';
 import type { TaskDto } from '@/shared/api/types/task.dto';
@@ -23,8 +22,8 @@ export function Card({
 }: CardProps) {
   const dispatch = useAppDispatch();
   const taskId = String(card.id);
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const activeTaskId = useAppSelector((state) => state.tasks.activeTaskId);
+  const isDrawerOpen = activeTaskId === taskId;
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(title);
 
@@ -88,10 +87,8 @@ export function Card({
   };
 
   const openDrawer = () => {
-    if (!isEditing) setIsDrawerOpen(true);
+    if (!isEditing) dispatch(setActiveTask(taskId));
   };
-
-  const closeDrawer = () => setIsDrawerOpen(false);
 
   return (
     <>
@@ -151,14 +148,6 @@ export function Card({
           </div>
         </div>
       </div>
-
-      <TaskDrawer
-        isOpen={isDrawerOpen}
-        onClose={closeDrawer}
-        taskNumber={taskNumber}
-        task={card}
-        columnAlias={columnAlias}
-      />
     </>
   );
 }
