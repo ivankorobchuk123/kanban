@@ -13,6 +13,11 @@
     border-color: var(--blue-5);
     box-shadow: 0 0 0 1px var(--blue-5);
   }
+  &.selected {
+    border-color: var(--blue-5);
+    box-shadow: 0 0 0 2px var(--blue-5);
+    background-color: color-mix(in srgb, var(--blue-5) 8%, #fff);
+  }
   &:hover {
     .configCard {
       opacity: 1;

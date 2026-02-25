@@ -7,6 +7,7 @@ import {
   updateTaskTitle,
   removeTask,
   setActiveTask,
+  toggleTaskSelection,
 } from '@/app/store/slices/tasksSlice';
 import { useTaskDraggable } from '@/shared/lib/dnd/useTaskDraggable';
 import { useTaskDropTarget } from '@/shared/lib/dnd/useTaskDropTarget';
@@ -37,7 +38,9 @@ export function Card({
   const confirm = useConfirm();
   const taskId = String(card.id);
   const activeTaskId = useAppSelector((state) => state.tasks.activeTaskId);
+  const selectedTaskIds = useAppSelector((state) => state.tasks.selectedTaskIds);
   const isDrawerOpen = activeTaskId === taskId;
+  const isSelected = selectedTaskIds.includes(taskId);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(title);
 
@@ -91,11 +94,6 @@ export function Card({
     adjustTextareaHeight();
   }, [editValue]);
 
-  const handleEdit = () => {
-    setEditValue(title);
-    setIsEditing(true);
-  };
-
   const handleSave = () => {
     setIsEditing(false);
     const newTitle = editValue.trim();
@@ -133,15 +131,19 @@ export function Card({
     if (!isEditing) dispatch(setActiveTask(taskId));
   };
 
+  const handleCardClick = () => {
+    if (!isEditing) dispatch(toggleTaskSelection(taskId));
+  };
+
   return (
     <>
       <div
         ref={cardRef}
-        className={`${styles.card} ${isDrawerOpen ? styles.active : ''}`}
-        onClick={openDrawer}
+        className={`${styles.card} ${isDrawerOpen ? styles.active : ''} ${isSelected ? styles.selected : ''}`}
+        onClick={handleCardClick}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => e.key === 'Enter' && openDrawer()}
+        onKeyDown={(e) => e.key === 'Enter' && handleCardClick()}
         style={{ position: 'relative' }}
       >
         {closestEdge && <DropIndicator edge={closestEdge} gap="4px" />}
@@ -152,7 +154,7 @@ export function Card({
           >
             <div
               className={`${styles.editIcon} ${styles.icon}`}
-              onClick={handleEdit}
+              onClick={openDrawer}
             >
               <span className="material-icons-outlined">edit</span>
             </div>

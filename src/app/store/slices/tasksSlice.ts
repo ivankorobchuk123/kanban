@@ -14,6 +14,7 @@ const initialState = {
   tasks: mockTasks,
   activeTaskId: null as string | null,
   searchQuery: '',
+  selectedTaskIds: [] as string[],
 };
 
 const tasksSlice = createSlice({
@@ -46,6 +47,7 @@ const tasksSlice = createSlice({
       if (state.activeTaskId === taskId) {
         state.activeTaskId = null;
       }
+      state.selectedTaskIds = state.selectedTaskIds.filter((id) => id !== taskId);
     },
 
     addTask: (
@@ -238,6 +240,84 @@ const tasksSlice = createSlice({
       state.activeTaskId = action.payload;
     },
 
+    toggleTaskSelection: (state, action: PayloadAction<string>) => {
+      const id = action.payload;
+      const idx = state.selectedTaskIds.indexOf(id);
+      if (idx >= 0) {
+        state.selectedTaskIds.splice(idx, 1);
+      } else {
+        state.selectedTaskIds.push(id);
+      }
+    },
+
+    selectTasks: (state, action: PayloadAction<string[]>) => {
+      state.selectedTaskIds = action.payload;
+    },
+
+    clearTaskSelection: (state) => {
+      state.selectedTaskIds = [];
+    },
+
+    removeTasks: (
+      state,
+      action: PayloadAction<Array<{ taskId: string; columnAlias: string }>>
+    ) => {
+      const ids = new Set(action.payload.map((p) => p.taskId));
+      state.tasks = state.tasks.filter((t) => !ids.has(String(t.id)));
+      state.selectedTaskIds = state.selectedTaskIds.filter((id) => !ids.has(id));
+      if (state.activeTaskId && ids.has(state.activeTaskId)) {
+        state.activeTaskId = null;
+      }
+    },
+
+    toggleTasksComplete: (state, action: PayloadAction<string[]>) => {
+      const ids = new Set(action.payload);
+      state.tasks.forEach((task) => {
+        if (ids.has(String(task.id)) && 'completed' in task) {
+          (task as { completed?: boolean }).completed = !(
+            task as { completed?: boolean }
+          ).completed;
+        }
+      });
+    },
+
+    moveTasksToColumn: (
+      state,
+      action: PayloadAction<{
+        taskIds: string[];
+        toColumnAlias: string;
+        status: {
+          id: string;
+          label: string;
+          variant: TaskVariant;
+          color: string;
+        };
+      }>
+    ) => {
+      const { taskIds, toColumnAlias, status } = action.payload;
+      const idSet = new Set(taskIds);
+      const tasksToMove = state.tasks.filter((t) => idSet.has(String(t.id)));
+      if (tasksToMove.length === 0) return;
+
+      tasksToMove.forEach((task) => {
+        task.columnAlias = toColumnAlias;
+        task.status = {
+          id: status.id,
+          label: status.label,
+          variant: status.variant,
+          color: status.color,
+        };
+      });
+
+      const allInTarget = state.tasks
+        .filter((t) => t.columnAlias === toColumnAlias)
+        .sort((a, b) => a.order - b.order);
+      allInTarget.forEach((t, i) => {
+        t.order = i;
+      });
+      state.selectedTaskIds = [];
+    },
+
     setSearchQuery: (state, action: PayloadAction<string>) => {
       state.searchQuery = action.payload;
     },
@@ -329,7 +409,9 @@ export const {
   updateTaskTitle,
   removeTask,
   removeTaskById,
+  removeTasks,
   toggleTaskComplete,
+  toggleTasksComplete,
   updateTaskText,
   addTask,
   addTaskEndAndOpen,
@@ -337,10 +419,14 @@ export const {
   updateTaskAssignee,
   updateTaskStatus,
   moveTask,
+  moveTasksToColumn,
   updateTaskComments,
   removeTasksByColumn,
   setActiveTask,
   setSearchQuery,
+  toggleTaskSelection,
+  selectTasks,
+  clearTaskSelection,
 } = tasksSlice.actions;
 
 export const addTaskThunk =

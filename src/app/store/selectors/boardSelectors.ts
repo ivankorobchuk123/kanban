@@ -10,6 +10,9 @@ export const selectSearchQuery = (state: RootState) => state.tasks.searchQuery;
 export const selectActiveTaskId = (state: RootState) =>
   state.tasks.activeTaskId;
 
+export const selectSelectedTaskIds = (state: RootState) =>
+  state.tasks.selectedTaskIds;
+
 export const selectTasksByColumn = (state: RootState, columnAlias: string) =>
   state.tasks.tasks
     .filter((item) => item.columnAlias === columnAlias)

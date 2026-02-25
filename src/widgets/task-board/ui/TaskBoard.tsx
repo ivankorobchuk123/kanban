@@ -10,6 +10,7 @@ import {
 } from '@/app/store/selectors/boardSelectors';
 import styles from '@/widgets/task-board/ui/TaskBoard.module.css';
 import { HeaderBoard } from '@/widgets/headerBoard/ui/HeaderBoard';
+import { SelectionBar } from '@/widgets/selectionBar';
 
 export function TaskBoard() {
   const dispatch = useAppDispatch();
@@ -22,6 +23,7 @@ export function TaskBoard() {
     <div>
       <div className={styles.title}>Rec: Tasks</div>
       <HeaderBoard />
+      <SelectionBar />
       <div className={`${styles.board} flex`}>
         {boardData.map((column) => (
           <Column

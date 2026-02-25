@@ -1,6 +1,3 @@
-/**
- * Hook for making a task draggable using pragmatic-drag-and-drop.
- */
 import { useEffect } from 'react'
 
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
