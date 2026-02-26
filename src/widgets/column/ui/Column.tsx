@@ -6,10 +6,22 @@ import type { TaskVariant } from '@/app/store/types';
 import { NewTask } from '@/features/addTask/ui/NewTask';
 import { useConfirm } from '@/shared/ui/ConfirmDialog';
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux';
-import { deleteColumn, updateColumn, reorderColumn } from '@/app/store/slices/columnsSlice';
+import {
+  deleteColumn,
+  updateColumn,
+  reorderColumn,
+} from '@/app/store/slices/columnsSlice';
 import { AddColumnPopup } from '@/features/addColumn';
-import { removeStatusOption, updateStatusOption } from '@/app/store/slices/statusOptionsSlice';
-import { removeTasksByColumn, moveTask, moveMultipleTasksToIndex, selectTasks } from '@/app/store/slices/tasksSlice';
+import {
+  removeStatusOption,
+  updateStatusOption,
+} from '@/app/store/slices/statusOptionsSlice';
+import {
+  removeTasksByColumn,
+  moveTask,
+  moveMultipleTasksToIndex,
+  selectTasks,
+} from '@/app/store/slices/tasksSlice';
 import { useColumnDraggable } from '@/shared/lib/dnd/useColumnDraggable';
 import { useColumnDropTarget } from '@/shared/lib/dnd/useColumnDropTarget';
 import type { ColumnEdge } from '@/shared/lib/dnd/useColumnDropTarget';
@@ -40,14 +52,27 @@ export function Column({ column, variant }: ColumnProps) {
   const [closestEdge, setClosestEdge] = useState<ColumnEdge | null>(null);
 
   useColumnDraggable(columnRef, headerRef, column.alias, setIsDragging);
-  useColumnDropTarget(columnRef, column.alias, (params) => dispatch(reorderColumn(params)), setClosestEdge);
+  useColumnDropTarget(
+    columnRef,
+    column.alias,
+    (params) => dispatch(reorderColumn(params)),
+    setClosestEdge
+  );
 
   const handleTaskDrop = useCallback(
-    ({ taskId, fromColumnAlias, toColumnAlias, targetIndex, selectedTaskIds: draggedIds }: TaskDropParams) => {
-      const statusOption = statusObjects[column.status] ?? statusObjects[column.alias];
+    ({
+      taskId,
+      fromColumnAlias,
+      toColumnAlias,
+      targetIndex,
+      selectedTaskIds: draggedIds,
+    }: TaskDropParams) => {
+      const statusOption =
+        statusObjects[column.status] ?? statusObjects[column.alias];
       if (!statusOption) return;
 
-      const isMultiDrag = draggedIds.length > 1 && fromColumnAlias !== toColumnAlias;
+      const isMultiDrag =
+        draggedIds.length > 1 && fromColumnAlias !== toColumnAlias;
 
       if (isMultiDrag) {
         dispatch(
@@ -72,10 +97,16 @@ export function Column({ column, variant }: ColumnProps) {
     },
     [dispatch, column.status, column.alias, statusObjects]
   );
-  useTaskDropTarget(cardsRef, column.alias, column.tasks.length, handleTaskDrop, {
-    useClosestEdge: false,
-    enabled: column.tasks.length === 0,
-  });
+  useTaskDropTarget(
+    cardsRef,
+    column.alias,
+    column.tasks.length,
+    handleTaskDrop,
+    {
+      useClosestEdge: false,
+      enabled: column.tasks.length === 0,
+    }
+  );
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
@@ -120,7 +151,8 @@ export function Column({ column, variant }: ColumnProps) {
 
   const columnTaskIds = column.tasks.map((t) => String(t.id));
   const isAllSelected =
-    columnTaskIds.length > 0 && columnTaskIds.every((id) => selectedTaskIds.includes(id));
+    columnTaskIds.length > 0 &&
+    columnTaskIds.every((id) => selectedTaskIds.includes(id));
 
   const handleSelectAll = useCallback(() => {
     if (isAllSelected) {
@@ -150,19 +182,44 @@ export function Column({ column, variant }: ColumnProps) {
     }
   };
   return (
-    <div ref={columnRef} className={`${styles.column}`} style={{ backgroundColor: column.color ? `color-mix(in srgb, ${column.color} 30%, white)` : undefined, position: 'relative', opacity: isDragging ? 0.4 : 1, transition: 'opacity 0.15s' }}>
+    <div
+      ref={columnRef}
+      className={`${styles.column}`}
+      style={{
+        backgroundColor: column.color
+          ? `color-mix(in srgb, ${column.color} 30%, white)`
+          : undefined,
+        position: 'relative',
+        opacity: isDragging ? 0.4 : 1,
+        transition: 'opacity 0.15s',
+      }}
+    >
       {closestEdge && <DropIndicator edge={closestEdge} gap="8px" />}
-      <div ref={headerRef} className={`${styles.wrapBadge} flex items-center justify-between ${styles.columnDragHandle}`}>
+      <div
+        ref={headerRef}
+        className={`${styles.wrapBadge} flex items-center justify-between ${styles.columnDragHandle}`}
+      >
         <div className="flex items-center">
-          <Badge variant={variant} color={column.color}>{column.title}</Badge>
-          <span className={styles.count} style={{ color: column.color ? `color-mix(in srgb, ${column.color} 70%, black)` : undefined }}>{column.tasks.length}</span>
+          <Badge variant={variant} color={column.color}>
+            {column.title}
+          </Badge>
+          <span
+            className={styles.count}
+            style={{
+              color: column.color
+                ? `color-mix(in srgb, ${column.color} 70%, black)`
+                : undefined,
+            }}
+          >
+            {column.tasks.length}
+          </span>
         </div>
         <div className="flex items-center" style={{ position: 'relative' }}>
           <button
             ref={menuButtonRef}
             type="button"
             className={styles.icon}
-            onClick={() => setIsMenuOpen((v) => !v)}
+            onClick={() => setIsMenuOpen((prev) => !prev)}
             aria-expanded={isMenuOpen}
             aria-haspopup="menu"
           >
@@ -171,11 +228,21 @@ export function Column({ column, variant }: ColumnProps) {
 
           {isMenuOpen && (
             <div className={styles.dropdown} role="menu">
-              <button type="button" className={styles.menuItem} onClick={handleEditColumn} role="menuitem">
+              <button
+                type="button"
+                className={styles.menuItem}
+                onClick={handleEditColumn}
+                role="menuitem"
+              >
                 <span className="material-icons-outlined">edit</span>
                 Edit
               </button>
-              <button type="button" className={styles.menuItem} onClick={handleDeleteColumn} role="menuitem">
+              <button
+                type="button"
+                className={styles.menuItem}
+                onClick={handleDeleteColumn}
+                role="menuitem"
+              >
                 <span className="material-icons-outlined">delete</span>
                 Delete
               </button>
@@ -205,7 +272,7 @@ export function Column({ column, variant }: ColumnProps) {
           />
         ))}
       </div>
-      <NewTask color={column.color}  columnAlias={column.alias} />
+      <NewTask color={column.color} columnAlias={column.alias} />
       <AddColumnPopup
         isOpen={isEditPopupOpen}
         onClose={() => setIsEditPopupOpen(false)}

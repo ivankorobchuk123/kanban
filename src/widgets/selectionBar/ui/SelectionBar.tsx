@@ -5,13 +5,10 @@ import {
   clearTaskSelection,
   toggleTasksComplete,
   moveTasksToColumn,
-  archiveTasks,
 } from '@/app/store/slices/tasksSlice';
-import type { ArchiveStatus } from '@/app/store/slices/tasksSlice';
 import { useConfirm } from '@/shared/ui/ConfirmDialog';
 import { StatusSelectDropdown } from '@/shared/ui/StatusSelectDropdown';
 import type { StatusOption } from '@/app/store/statusOptions';
-import { ADDITIONAL_STATUS_OBJECTS } from '@/app/store/statusOptions';
 import type { TaskVariant } from '@/app/store/types';
 import { selectColumns } from '@/app/store/selectors/boardSelectors';
 import { selectStatusObjects } from '@/app/store/selectors/statusSelectors';
@@ -52,15 +49,7 @@ export function SelectionBar() {
     };
   });
 
-  const archiveOptions = [
-    ADDITIONAL_STATUS_OBJECTS['completed'],
-    ADDITIONAL_STATUS_OBJECTS['canceled'],
-  ];
-
-  const statusGroups = [
-    { label: 'In Progress', options: columnOptions },
-    { label: 'Complete', options: archiveOptions },
-  ];
+  const statusGroups = [{ label: '', options: columnOptions }];
 
   const handleDelete = async () => {
     const ok = await confirm({
@@ -79,33 +68,24 @@ export function SelectionBar() {
   };
 
   const handleStatusSelect = (option: StatusOption) => {
-    if (option.id === 'completed' || option.id === 'canceled') {
-      dispatch(
-        archiveTasks({
-          taskIds: selectedIds,
-          archiveStatus: option.id as ArchiveStatus,
-        })
-      );
-    } else {
-      const status = statusObjects[option.id] ?? {
-        id: option.id,
-        label: option.label,
-        variant: option.variant as StatusOption['variant'],
-        color: option.color,
-      };
-      dispatch(
-        moveTasksToColumn({
-          taskIds: selectedIds,
-          toColumnAlias: option.id,
-          status: {
-            id: status.id,
-            label: status.label,
-            variant: status.variant,
-            color: status.color,
-          },
-        })
-      );
-    }
+    const status = statusObjects[option.id] ?? {
+      id: option.id,
+      label: option.label,
+      variant: option.variant as StatusOption['variant'],
+      color: option.color,
+    };
+    dispatch(
+      moveTasksToColumn({
+        taskIds: selectedIds,
+        toColumnAlias: option.id,
+        status: {
+          id: status.id,
+          label: status.label,
+          variant: status.variant,
+          color: status.color,
+        },
+      })
+    );
     setIsStatusOpen(false);
   };
 
