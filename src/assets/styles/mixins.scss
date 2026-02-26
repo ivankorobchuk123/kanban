@@ -1,0 +1,61 @@
+$break-small: 812px;
+$break-large: 813px;
+$break-large-right: 1024px;
+@mixin respond-to($media) {
+  @if $media == mobile {
+    @media only screen and (max-width: $break-small) {
+      @content;
+    }
+  } @else if $media == tablet {
+    @media only screen and (min-width: $break-large) and (max-width: $break-large-right) {
+      @content;
+    }
+  } @else if $media == tablet-portrait {
+    @media only screen and (min-width: $break-large) and (max-width: $break-large-right) and (orientation: portrait) {
+      @content;
+    }
+  } @else if $media == theHead {
+    @media only screen and (min-width: $break-large) and (max-width: 1220px) {
+      @content;
+    }
+  } @else if $media == tablet-desc {
+    @media only screen and (min-width: 1025px) and (max-width: 1140px) {
+      @content;
+    }
+  } @else if $media == cardMax {
+    @media only screen and (min-width: 1800px) {
+      @content;
+    }
+  } @else if $media == desc {
+    @media only screen and (min-width: 1351px) and (max-width: 1635px) {
+      @content;
+    }
+  } @else if $media == cardBig {
+    @media only screen and (max-width: 1350px) {
+      @content;
+    }
+  } @else if $media == height {
+    @media only screen and (max-height: 700px) {
+      @content;
+    }
+  }
+}
+
+// retina bg
+@mixin retina {
+  @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
+    @content;
+  }
+}
+
+@mixin placeholder {
+  &.placeholder {
+    @content;
+  }
+  &:-moz-placeholder {
+    @content;
+  }
+  &::-webkit-input-placeholder {
+    @content;
+  }
+}

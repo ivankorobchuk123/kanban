@@ -1,3 +1,23 @@
-.mainPage {
-    padding: 24px;
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.rightColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.content {
+  padding: 0 24px;
 }

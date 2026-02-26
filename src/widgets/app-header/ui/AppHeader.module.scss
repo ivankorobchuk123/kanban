@@ -1,0 +1,93 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 52px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+  background: #ffffff;
+  flex-shrink: 0;
+}
+
+// Breadcrumb
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.workspace {
+  font-size: 13px;
+  color: var(--grey-6);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--black-1);
+  }
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  color: var(--grey-4);
+}
+
+.page {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--black-1);
+}
+
+// Actions
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.iconBtn {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: var(--grey-6);
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--grey-2);
+    color: var(--black-1);
+  }
+}
+
+.dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 1.5px solid white;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 4px;
+}
