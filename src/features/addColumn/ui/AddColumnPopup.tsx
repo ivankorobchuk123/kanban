@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 import styles from './AddColumnPopup.module.scss';
 
@@ -8,22 +8,27 @@ interface AddColumnPopupProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (title: string, color: string) => void;
+  initialTitle?: string;
+  initialColor?: string;
 }
 
-export function AddColumnPopup({ isOpen, onClose, onSubmit }: AddColumnPopupProps) {
-  const [title, setTitle] = useState('');
-  const [color, setColor] = useState(DEFAULT_COLOR);
-
-  const resetForm = useCallback(() => {
-    setTitle('');
-    setColor(DEFAULT_COLOR);
-  }, []);
+export function AddColumnPopup({
+  isOpen,
+  onClose,
+  onSubmit,
+  initialTitle,
+  initialColor,
+}: AddColumnPopupProps) {
+  const isEdit = initialTitle !== undefined;
+  const [title, setTitle] = useState(initialTitle ?? '');
+  const [color, setColor] = useState(initialColor ?? DEFAULT_COLOR);
 
   useEffect(() => {
     if (isOpen) {
-      resetForm();
+      setTitle(initialTitle ?? '');
+      setColor(initialColor ?? DEFAULT_COLOR);
     }
-  }, [isOpen, resetForm]);
+  }, [isOpen, initialTitle, initialColor]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -66,7 +71,7 @@ export function AddColumnPopup({ isOpen, onClose, onSubmit }: AddColumnPopupProp
         <form onSubmit={handleSubmit}>
           <div className={styles.content}>
             <h2 id="add-column-title" className={styles.title}>
-              New column
+              {isEdit ? 'Edit column' : 'New column'}
             </h2>
             <div className={styles.field}>
               <label htmlFor="column-name" className={styles.label}>
@@ -103,7 +108,7 @@ export function AddColumnPopup({ isOpen, onClose, onSubmit }: AddColumnPopupProp
               Cancel
             </button>
             <button type="submit" className={`${styles.button} ${styles.confirm}`}>
-              Create
+              {isEdit ? 'Save' : 'Create'}
             </button>
           </div>
         </form>

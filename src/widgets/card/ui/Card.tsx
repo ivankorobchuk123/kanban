@@ -153,7 +153,7 @@ export function Card({
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              className={`${styles.editIcon} ${styles.icon}`}
+              className={`${styles.icon}`}
               onClick={openDrawer}
             >
               <span className="material-icons-outlined">edit</span>

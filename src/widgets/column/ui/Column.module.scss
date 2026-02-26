@@ -1,5 +1,7 @@
 .column {
     width: 276px;
+    min-width: 276px;
+    flex-shrink: 0;
     padding: 7px 9px;
     border-radius: 11px;
     background-color: rgba(66,35,3,.031);
@@ -35,5 +37,46 @@
         span {
             font-size: 18px;
         }
+    }
+
+    .dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 4px;
+        min-width: 160px;
+        background: #ffffff;
+        border: 1px solid var(--grey-3);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        padding: 4px 0;
+    }
+
+    .menuItem {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        padding: 8px 12px;
+        border: none;
+        background: transparent;
+        text-align: left;
+        font-size: 14px;
+        cursor: pointer;
+        color: var(--grey-6);
+
+        .material-icons-outlined {
+            font-size: 18px;
+        }
+
+        &:hover {
+            background: var(--grey-2);
+            color: inherit;
+        }
+    }
+
+    .selectAll {
+        padding: 6px 0 4px;
     }
 }

@@ -31,8 +31,19 @@ const statusOptionsSlice = createSlice({
     removeStatusOption: (state, action: PayloadAction<string>) => {
       state.statusOptions = state.statusOptions.filter((item) => item.id !== action.payload);
     },
+    updateStatusOption: (
+      state,
+      action: PayloadAction<{ id: string; label?: string; color?: string }>
+    ) => {
+      const { id, label, color } = action.payload;
+      const opt = state.statusOptions.find((item) => item.id === id);
+      if (opt) {
+        if (label !== undefined) opt.label = label;
+        if (color !== undefined) opt.color = color;
+      }
+    },
   },
 });
 
-export const { addStatusOption, removeStatusOption } = statusOptionsSlice.actions;
+export const { addStatusOption, removeStatusOption, updateStatusOption } = statusOptionsSlice.actions;
 export default statusOptionsSlice.reducer;

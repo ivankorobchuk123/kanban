@@ -36,6 +36,18 @@ const columnsSlice = createSlice({
       state.columns = state.columns.filter((col) => col.alias !== columnAlias);
     },
 
+    updateColumn: (
+      state,
+      action: PayloadAction<{ columnAlias: string; title?: string; color?: string }>
+    ) => {
+      const { columnAlias, title, color } = action.payload;
+      const col = state.columns.find((c) => c.alias === columnAlias);
+      if (col) {
+        if (title !== undefined) col.title = title;
+        if (color !== undefined) col.color = color;
+      }
+    },
+
     reorderColumn: (
       state,
       action: PayloadAction<{ columnAlias: string; targetColumnAlias: string }>
@@ -58,5 +70,5 @@ const columnsSlice = createSlice({
   },
 });
 
-export const { addColumn, deleteColumn, reorderColumn } = columnsSlice.actions;
+export const { addColumn, deleteColumn, updateColumn, reorderColumn } = columnsSlice.actions;
 export default columnsSlice.reducer;

@@ -1,17 +1,20 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useState, useEffect } from 'react';
 import { Card } from '@/widgets/card/ui/Card';
 import { Badge } from '@/shared/ui/Badge';
 import type { TaskVariant } from '@/app/store/types';
 import { NewTask } from '@/features/addTask/ui/NewTask';
 import { useConfirm } from '@/shared/ui/ConfirmDialog';
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux';
-import { deleteColumn, reorderColumn } from '@/app/store/slices/columnsSlice';
-import { removeStatusOption } from '@/app/store/slices/statusOptionsSlice';
-import { removeTasksByColumn, moveTask } from '@/app/store/slices/tasksSlice';
+import { deleteColumn, updateColumn, reorderColumn } from '@/app/store/slices/columnsSlice';
+import { AddColumnPopup } from '@/features/addColumn';
+import { removeStatusOption, updateStatusOption } from '@/app/store/slices/statusOptionsSlice';
+import { removeTasksByColumn, moveTask, selectTasks } from '@/app/store/slices/tasksSlice';
 import { useColumnDraggable } from '@/shared/lib/dnd/useColumnDraggable';
 import { useColumnDropTarget } from '@/shared/lib/dnd/useColumnDropTarget';
 import { useTaskDropTarget } from '@/shared/lib/dnd/useTaskDropTarget';
 import { selectStatusObjects } from '@/app/store/selectors/statusSelectors';
+import { selectSelectedTaskIds } from '@/app/store/selectors/boardSelectors';
+import { Checkbox } from '@/shared/ui/Checkbox';
 
 import styles from './Column.module.scss';
 import type { ColumnDto } from '@/app/store/mock';
@@ -25,6 +28,7 @@ export function Column({ column, variant }: ColumnProps) {
   const confirm = useConfirm();
   const dispatch = useAppDispatch();
   const statusObjects = useAppSelector(selectStatusObjects);
+  const selectedTaskIds = useAppSelector(selectSelectedTaskIds);
   const columnRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
@@ -64,7 +68,63 @@ export function Column({ column, variant }: ColumnProps) {
     enabled: column.tasks.length === 0,
   });
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        menuButtonRef.current &&
+        !menuButtonRef.current.contains(e.target as Node) &&
+        !(e.target as Element).closest(`.${styles.dropdown}`)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isMenuOpen]);
+
+  const handleEditColumn = () => {
+    setIsMenuOpen(false);
+    setIsEditPopupOpen(true);
+  };
+
+  const handleEditPopupSubmit = useCallback(
+    (title: string, color: string) => {
+      dispatch(updateColumn({ columnAlias: column.alias, title, color }));
+      if (column.alias.startsWith('column-')) {
+        dispatch(updateStatusOption({ id: column.alias, label: title, color }));
+      }
+    },
+    [dispatch, column.alias]
+  );
+
+  const columnTaskIds = column.tasks.map((t) => String(t.id));
+  const isAllSelected =
+    columnTaskIds.length > 0 && columnTaskIds.every((id) => selectedTaskIds.includes(id));
+
+  const handleSelectAll = useCallback(() => {
+    if (isAllSelected) {
+      dispatch(
+        selectTasks(selectedTaskIds.filter((id) => !columnTaskIds.includes(id)))
+      );
+    } else {
+      dispatch(selectTasks(columnTaskIds));
+    }
+  }, [dispatch, isAllSelected, selectedTaskIds, columnTaskIds]);
+
   const handleDeleteColumn = async () => {
+    setIsMenuOpen(false);
     const ok = await confirm({
       title: 'Remove column?',
       message: 'Are you sure you want to remove this column?',
@@ -87,12 +147,41 @@ export function Column({ column, variant }: ColumnProps) {
           <Badge variant={variant} color={column.color}>{column.title}</Badge>
           <span className={styles.count} style={{ color: column.color ? `color-mix(in srgb, ${column.color} 70%, black)` : undefined }}>{column.tasks.length}</span>
         </div>
-        <div className="flex items-center">
-          <button className={styles.icon} onClick={handleDeleteColumn}>
-            <span className="material-icons-outlined">delete</span>
+        <div className="flex items-center" style={{ position: 'relative' }}>
+          <button
+            ref={menuButtonRef}
+            type="button"
+            className={styles.icon}
+            onClick={() => setIsMenuOpen((v) => !v)}
+            aria-expanded={isMenuOpen}
+            aria-haspopup="menu"
+          >
+            <span className="material-icons-outlined">more_vert</span>
           </button>
+
+          {isMenuOpen && (
+            <div className={styles.dropdown} role="menu">
+              <button type="button" className={styles.menuItem} onClick={handleEditColumn} role="menuitem">
+                <span className="material-icons-outlined">edit</span>
+                Редактировать
+              </button>
+              <button type="button" className={styles.menuItem} onClick={handleDeleteColumn} role="menuitem">
+                <span className="material-icons-outlined">delete</span>
+                Удалить
+              </button>
+            </div>
+          )}
         </div>
       </div>
+      {column.tasks.length > 0 && (
+        <div className={styles.selectAll}>
+          <Checkbox
+            checked={isAllSelected}
+            onChange={() => handleSelectAll()}
+            label="Select all"
+          />
+        </div>
+      )}
       <div ref={cardsRef} className={styles.cards}>
         {column.tasks.map((card, index) => (
           <Card
@@ -107,6 +196,13 @@ export function Column({ column, variant }: ColumnProps) {
         ))}
       </div>
       <NewTask color={column.color}  columnAlias={column.alias} />
+      <AddColumnPopup
+        isOpen={isEditPopupOpen}
+        onClose={() => setIsEditPopupOpen(false)}
+        onSubmit={handleEditPopupSubmit}
+        initialTitle={column.title}
+        initialColor={column.color || undefined}
+      />
     </div>
   );
 }
