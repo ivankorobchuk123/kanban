@@ -1,3 +1,5 @@
+@import '../../../assets/styles/mixins.scss';
+
 .header {
   display: flex;
   align-items: center;
@@ -7,6 +9,11 @@
   border-bottom: 1px solid var(--border);
   background: #ffffff;
   flex-shrink: 0;
+
+  @include respond-to(mobile) {
+    padding: 0 16px;
+    gap: 8px;
+  }
 }
 
 // Breadcrumb
@@ -25,12 +32,20 @@
   &:hover {
     color: var(--black-1);
   }
+
+  @include respond-to(mobile) {
+    display: none;
+  }
 }
 
 .separator {
   display: flex;
   align-items: center;
   color: var(--grey-4);
+
+  @include respond-to(mobile) {
+    display: none;
+  }
 }
 
 .page {

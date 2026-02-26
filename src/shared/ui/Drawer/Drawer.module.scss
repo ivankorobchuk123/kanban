@@ -1,3 +1,5 @@
+@import '../../../assets/styles/mixins.scss';
+
 .overlay {
   position: fixed;
   inset: 0;
@@ -31,6 +33,11 @@
   &.open {
     transform: translateX(0);
   }
+
+  @include respond-to(mobile) {
+    width: 100vw;
+    max-width: 100vw;
+  }
 }
 
 .header {
@@ -39,6 +46,10 @@
   justify-content: space-between;
   padding: 20px 24px;
   border-bottom: 1px solid var(--grey-3);
+
+  @include respond-to(mobile) {
+    padding: 14px 16px;
+  }
 }
 
 .title {
@@ -46,6 +57,10 @@
   font-size: 18px;
   font-weight: 600;
   color: var(--color-text);
+
+  @include respond-to(mobile) {
+    font-size: 16px;
+  }
 }
 
 .closeBtn {
@@ -71,4 +86,10 @@
   padding: 24px;
   overflow-y: auto;
   height: calc(100vh - 80px);
+
+  @include respond-to(mobile) {
+    padding: 16px;
+    height: calc(100vh - 64px);
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
 }

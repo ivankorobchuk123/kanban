@@ -1,14 +1,28 @@
+@import '../../../assets/styles/mixins.scss';
+
 .header {
   display: flex;
   align-items: center;
   gap: 24px;
   margin-bottom: 20px;
+
+  @include respond-to(mobile) {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
 }
 
 .searchWrapper {
   position: relative;
   flex: 1;
   max-width: 400px;
+
+  @include respond-to(mobile) {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    order: -1;
+  }
 }
 
 .searchIcon {
@@ -46,6 +60,11 @@
   display: flex;
   align-items: center;
   gap: 12px;
+
+  @include respond-to(mobile) {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
 }
 
 .addColumnButton {
