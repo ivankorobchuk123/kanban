@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { TaskVariant } from '@/app/store/types';
 import type { StatusOption } from '@/app/store/statusOptions';
+import { ADDITIONAL_STATUS_OBJECTS } from '@/app/store/statusOptions';
 
 const INITIAL_STATUS_OPTIONS: StatusOption[] = [
   { id: 'in-progress', label: 'In Progress', variant: TaskVariant.SECONDARY, color: '#f1e0ba' },
@@ -10,6 +11,7 @@ const INITIAL_STATUS_OPTIONS: StatusOption[] = [
   { id: 'done', label: 'Done', variant: TaskVariant.DONE, color: '#c7e9c0' },
   { id: 'canceled', label: 'Canceled', variant: TaskVariant.CANCELED, color: '#e4e4e4' },
   { id: 'blocked', label: 'Blocked', variant: TaskVariant.BLOCKED, color: '#ffcdd2' },
+  ADDITIONAL_STATUS_OBJECTS['completed'],
 ];
 
 const initialState = {

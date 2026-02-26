@@ -3,12 +3,29 @@
   top: 100%;
   left: 0;
   margin-top: 4px;
-  min-width: 160px;
+  min-width: 180px;
   background: #ffffff;
   border: 1px solid var(--grey-3);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 100;
+  padding: 8px 0;
+}
+
+.group {
+  &:not(:last-child) {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--grey-3);
+  }
+}
+
+.groupLabel {
+  padding: 4px 12px 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--grey-6);
+  text-transform: capitalize;
 }
 
 .option {

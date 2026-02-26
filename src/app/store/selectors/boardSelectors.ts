@@ -13,6 +13,9 @@ export const selectActiveTaskId = (state: RootState) =>
 export const selectSelectedTaskIds = (state: RootState) =>
   state.tasks.selectedTaskIds;
 
+export const selectArchivedTasks = (state: RootState) =>
+  state.tasks.archivedTasks;
+
 export const selectTasksByColumn = (state: RootState, columnAlias: string) =>
   state.tasks.tasks
     .filter((item) => item.columnAlias === columnAlias)

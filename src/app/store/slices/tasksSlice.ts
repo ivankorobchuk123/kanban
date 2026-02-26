@@ -10,11 +10,19 @@ import { selectStatusObjects } from '@/app/store/selectors/statusSelectors';
 import type { StatusOption } from '@/app/store/statusOptions';
 import type { TaskVariant } from '@/app/store/types';
 
+export type ArchiveStatus = 'completed' | 'canceled';
+
+interface ArchivedTask {
+  task: (typeof mockTasks)[number];
+  archiveStatus: ArchiveStatus;
+}
+
 const initialState = {
   tasks: mockTasks,
   activeTaskId: null as string | null,
   searchQuery: '',
   selectedTaskIds: [] as string[],
+  archivedTasks: [] as ArchivedTask[],
 };
 
 const tasksSlice = createSlice({
@@ -281,6 +289,28 @@ const tasksSlice = createSlice({
       });
     },
 
+    archiveTasks: (
+      state,
+      action: PayloadAction<{
+        taskIds: string[];
+        archiveStatus: ArchiveStatus;
+      }>
+    ) => {
+      const { taskIds, archiveStatus } = action.payload;
+      const idSet = new Set(taskIds);
+      const tasksToArchive = state.tasks.filter((t) => idSet.has(String(t.id)));
+      if (tasksToArchive.length === 0) return;
+
+      tasksToArchive.forEach((task) => {
+        state.archivedTasks.push({ task: { ...task }, archiveStatus });
+      });
+      state.tasks = state.tasks.filter((t) => !idSet.has(String(t.id)));
+      state.selectedTaskIds = state.selectedTaskIds.filter((id) => !idSet.has(id));
+      if (state.activeTaskId && idSet.has(state.activeTaskId)) {
+        state.activeTaskId = null;
+      }
+    },
+
     moveTasksToColumn: (
       state,
       action: PayloadAction<{
@@ -410,6 +440,7 @@ export const {
   removeTask,
   removeTaskById,
   removeTasks,
+  archiveTasks,
   toggleTaskComplete,
   toggleTasksComplete,
   updateTaskText,
