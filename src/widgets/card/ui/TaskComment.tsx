@@ -11,7 +11,7 @@ interface TaskCommentProps {
 export function TaskComment({
   text,
   onSave,
-  placeholder = 'Добавить комментарий...',
+  placeholder = 'Add a comment...',
 }: TaskCommentProps) {
   const [localValue, setLocalValue] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);

@@ -149,7 +149,7 @@ export function TaskDrawer({
     <Drawer isOpen={isOpen && !isClosing} onClose={handleClose} title={taskNumber}>
       <div className={styles.content}>
         <div className={styles.section}>
-          <div className={styles.label}>Описание</div>
+          <div className={styles.label}>Description</div>
           <div className={styles.titleInputWrapper}>
             <span className={styles.pinIcon}>📍</span>
             <textarea
