@@ -1,4 +1,5 @@
 import { useRef, useCallback, useState, useEffect } from 'react';
+import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { Card } from '@/widgets/card/ui/Card';
 import { Badge } from '@/shared/ui/Badge';
 import type { TaskVariant } from '@/app/store/types';
@@ -11,6 +12,7 @@ import { removeStatusOption, updateStatusOption } from '@/app/store/slices/statu
 import { removeTasksByColumn, moveTask, moveMultipleTasksToIndex, selectTasks } from '@/app/store/slices/tasksSlice';
 import { useColumnDraggable } from '@/shared/lib/dnd/useColumnDraggable';
 import { useColumnDropTarget } from '@/shared/lib/dnd/useColumnDropTarget';
+import type { ColumnEdge } from '@/shared/lib/dnd/useColumnDropTarget';
 import { useTaskDropTarget } from '@/shared/lib/dnd/useTaskDropTarget';
 import type { TaskDropParams } from '@/shared/lib/dnd/useTaskDropTarget';
 import { selectStatusObjects } from '@/app/store/selectors/statusSelectors';
@@ -34,8 +36,11 @@ export function Column({ column, variant }: ColumnProps) {
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
-  useColumnDraggable(columnRef, headerRef, column.alias);
-  useColumnDropTarget(columnRef, column.alias, (params) => dispatch(reorderColumn(params)));
+  const [isDragging, setIsDragging] = useState(false);
+  const [closestEdge, setClosestEdge] = useState<ColumnEdge | null>(null);
+
+  useColumnDraggable(columnRef, headerRef, column.alias, setIsDragging);
+  useColumnDropTarget(columnRef, column.alias, (params) => dispatch(reorderColumn(params)), setClosestEdge);
 
   const handleTaskDrop = useCallback(
     ({ taskId, fromColumnAlias, toColumnAlias, targetIndex, selectedTaskIds: draggedIds }: TaskDropParams) => {
@@ -145,7 +150,8 @@ export function Column({ column, variant }: ColumnProps) {
     }
   };
   return (
-    <div ref={columnRef} className={`${styles.column}`} style={{ backgroundColor: column.color ? `color-mix(in srgb, ${column.color} 30%, white)` : undefined }}>
+    <div ref={columnRef} className={`${styles.column}`} style={{ backgroundColor: column.color ? `color-mix(in srgb, ${column.color} 30%, white)` : undefined, position: 'relative', opacity: isDragging ? 0.4 : 1, transition: 'opacity 0.15s' }}>
+      {closestEdge && <DropIndicator edge={closestEdge} gap="8px" />}
       <div ref={headerRef} className={`${styles.wrapBadge} flex items-center justify-between ${styles.columnDragHandle}`}>
         <div className="flex items-center">
           <Badge variant={variant} color={column.color}>{column.title}</Badge>

@@ -5,7 +5,8 @@ import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 export function useColumnDraggable(
   elementRef: React.RefObject<HTMLElement | null>,
   dragHandleRef: React.RefObject<HTMLElement | null>,
-  columnAlias: string
+  columnAlias: string,
+  onDragStateChange?: (isDragging: boolean) => void
 ) {
   useEffect(() => {
     const el = elementRef.current
@@ -19,6 +20,8 @@ export function useColumnDraggable(
         columnAlias,
         type: 'column',
       }),
+      onDragStart: () => onDragStateChange?.(true),
+      onDrop: () => onDragStateChange?.(false),
     })
-  }, [elementRef, dragHandleRef, columnAlias])
+  }, [elementRef, dragHandleRef, columnAlias, onDragStateChange])
 }
