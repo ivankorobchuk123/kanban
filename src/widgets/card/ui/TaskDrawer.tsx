@@ -37,6 +37,7 @@ export function TaskDrawer({
 }: TaskDrawerProps) {
   const dispatch = useAppDispatch();
   const columns = useAppSelector((state) => state.columns.columns);
+  const column = columns.find((c) => c.alias === columnAlias);
   const taskId = String(task.id);
   const [isClosing, setIsClosing] = useState(false);
   const [localValue, setLocalValue] = useState<string | null>(null);
@@ -158,6 +159,7 @@ export function TaskDrawer({
             users={mockUsers}
             onAssigneeChange={onAssigneeChange}
             onStatusChange={onStatusChange}
+            columnColor={column?.color}
           />
         </div>
         <div className={styles.section}>

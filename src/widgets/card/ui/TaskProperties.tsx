@@ -13,6 +13,7 @@ import {
 import { TaskVariant } from '@/app/store/types';
 import { useAppSelector } from '@/shared/lib/hooks/redux';
 import { selectStatusOptionGroups } from '@/app/store/selectors/statusSelectors';
+import { selectColumns } from '@/app/store/selectors/boardSelectors';
 import type { TaskDto } from '@/shared/api/types/task.dto';
 import { mockUsers } from '@/app/store/mock';
 
@@ -24,6 +25,8 @@ interface TaskPropertiesProps {
   onAssigneeChange?: (assignee: AssigneeOption) => void;
   task: TaskDto;
   onStatusChange?: (status: StatusOption) => void;
+  /** Column color — overrides task.status.color for the badge */
+  columnColor?: string;
 }
 
 export function TaskProperties({
@@ -31,12 +34,22 @@ export function TaskProperties({
   users = mockUsers as unknown as AssigneeOption[],
   onAssigneeChange,
   onStatusChange,
+  columnColor,
 }: TaskPropertiesProps) {
   const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
   const [isStatusOpen, setIsStatusOpen] = useState(false);
   const executorRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
   const statusGroups = useAppSelector(selectStatusOptionGroups);
+  const columns = useAppSelector(selectColumns);
+
+  const statusGroupsWithColumnColors = statusGroups.map((group) => ({
+    ...group,
+    options: group.options.map((opt) => {
+      const column = columns.find((c) => c.alias === opt.id);
+      return column ? { ...opt, color: column.color } : opt;
+    }),
+  }));
 
   const handleAssigneeClick = () => {
     setIsAssigneeOpen((prev) => !prev);
@@ -100,7 +113,7 @@ export function TaskProperties({
           className={`${styles.propertyValue} ${styles.statusWrapper}`}
           onClick={handleStatusClick}
         >
-          <Badge variant={task.status?.variant ?? TaskVariant.GHOST} color={task.status?.color}>{task.status?.label ?? '—'}</Badge>
+          <Badge variant={task.status?.variant ?? TaskVariant.GHOST} color={columnColor ?? task.status?.color}>{task.status?.label ?? '—'}</Badge>
           <EditButton
             onClick={(e) => {
               e.stopPropagation();
@@ -110,7 +123,7 @@ export function TaskProperties({
           <StatusSelectDropdown
             isOpen={isStatusOpen}
             onClose={() => setIsStatusOpen(false)}
-            groups={statusGroups}
+            groups={statusGroupsWithColumnColors}
             selectedId={task.status?.id ?? ''}
             onSelect={handleStatusSelect}
             anchorRef={statusRef}
