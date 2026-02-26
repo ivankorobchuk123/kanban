@@ -10,6 +10,7 @@ export type TaskDropParams = {
   fromColumnAlias: string;
   toColumnAlias: string;
   targetIndex: number;
+  selectedTaskIds: string[];
 };
 
 export type Edge = 'top' | 'right' | 'bottom' | 'left';
@@ -103,6 +104,7 @@ export function useTaskDropTarget(
           type?: string;
           taskId?: string;
           columnAlias?: string;
+          selectedTaskIds?: string[];
         };
         if (data.type !== 'task' || !data.taskId || !data.columnAlias) return;
 
@@ -118,6 +120,7 @@ export function useTaskDropTarget(
           fromColumnAlias: data.columnAlias,
           toColumnAlias: columnAlias,
           targetIndex: finalIndex,
+          selectedTaskIds: (data.selectedTaskIds ?? [String(data.taskId)]).map(String),
         });
         onClosestEdgeChange?.(null);
       },

@@ -312,6 +312,46 @@ const tasksSlice = createSlice({
       }
     },
 
+    moveMultipleTasksToIndex: (
+      state,
+      action: PayloadAction<{
+        taskIds: string[];
+        toColumnAlias: string;
+        targetIndex: number;
+        status: {
+          id: string;
+          label: string;
+          variant: TaskVariant;
+          color: string;
+        };
+      }>
+    ) => {
+      const { taskIds, toColumnAlias, targetIndex, status } = action.payload;
+      const idSet = new Set(taskIds);
+
+      state.tasks.forEach((task) => {
+        if (idSet.has(String(task.id))) {
+          task.columnAlias = toColumnAlias;
+          task.status = { ...status };
+        }
+      });
+
+      const allInTarget = state.tasks
+        .filter((t) => t.columnAlias === toColumnAlias)
+        .sort((a, b) => a.order - b.order);
+
+      const movedTasks = allInTarget.filter((t) => idSet.has(String(t.id)));
+      const otherTasks = allInTarget.filter((t) => !idSet.has(String(t.id)));
+
+      const insertAt = Math.min(targetIndex, otherTasks.length);
+      otherTasks.splice(insertAt, 0, ...movedTasks);
+      otherTasks.forEach((t, i) => {
+        t.order = i;
+      });
+
+      state.selectedTaskIds = [];
+    },
+
     moveTasksToColumn: (
       state,
       action: PayloadAction<{
@@ -455,6 +495,7 @@ export const {
   updateTaskAssignee,
   updateTaskStatus,
   moveTask,
+  moveMultipleTasksToIndex,
   moveTasksToColumn,
   updateTaskComments,
   removeTasksByColumn,

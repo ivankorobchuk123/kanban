@@ -55,7 +55,7 @@ export function Card({
     []
   );
 
-  useTaskDraggable(cardRef, cardRef, taskId, columnAlias);
+  useTaskDraggable(cardRef, cardRef, taskId, columnAlias, selectedTaskIds);
   useTaskDropTarget(
     cardRef,
     columnAlias,

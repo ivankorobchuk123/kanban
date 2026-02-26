@@ -8,10 +8,11 @@ import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux';
 import { deleteColumn, updateColumn, reorderColumn } from '@/app/store/slices/columnsSlice';
 import { AddColumnPopup } from '@/features/addColumn';
 import { removeStatusOption, updateStatusOption } from '@/app/store/slices/statusOptionsSlice';
-import { removeTasksByColumn, moveTask, selectTasks } from '@/app/store/slices/tasksSlice';
+import { removeTasksByColumn, moveTask, moveMultipleTasksToIndex, selectTasks } from '@/app/store/slices/tasksSlice';
 import { useColumnDraggable } from '@/shared/lib/dnd/useColumnDraggable';
 import { useColumnDropTarget } from '@/shared/lib/dnd/useColumnDropTarget';
 import { useTaskDropTarget } from '@/shared/lib/dnd/useTaskDropTarget';
+import type { TaskDropParams } from '@/shared/lib/dnd/useTaskDropTarget';
 import { selectStatusObjects } from '@/app/store/selectors/statusSelectors';
 import { selectSelectedTaskIds } from '@/app/store/selectors/boardSelectors';
 import { Checkbox } from '@/shared/ui/Checkbox';
@@ -37,19 +38,22 @@ export function Column({ column, variant }: ColumnProps) {
   useColumnDropTarget(columnRef, column.alias, (params) => dispatch(reorderColumn(params)));
 
   const handleTaskDrop = useCallback(
-    ({
-      taskId,
-      fromColumnAlias,
-      toColumnAlias,
-      targetIndex,
-    }: {
-      taskId: string;
-      fromColumnAlias: string;
-      toColumnAlias: string;
-      targetIndex: number;
-    }) => {
+    ({ taskId, fromColumnAlias, toColumnAlias, targetIndex, selectedTaskIds: draggedIds }: TaskDropParams) => {
       const statusOption = statusObjects[column.status] ?? statusObjects[column.alias];
-      if (statusOption) {
+      if (!statusOption) return;
+
+      const isMultiDrag = draggedIds.length > 1 && fromColumnAlias !== toColumnAlias;
+
+      if (isMultiDrag) {
+        dispatch(
+          moveMultipleTasksToIndex({
+            taskIds: draggedIds,
+            toColumnAlias,
+            targetIndex,
+            status: statusOption,
+          })
+        );
+      } else {
         dispatch(
           moveTask({
             taskId,
