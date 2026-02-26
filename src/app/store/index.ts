@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
 })
 
 const persistConfig = {
-  key: 'rac-man',
+  key: 'rec-man',
   storage,
 }
 

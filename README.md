@@ -56,10 +56,10 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ```bash
 # Build image
-docker build -t rac-man .
+docker build -t rec-man .
 
 # Run on port 3000
-docker run -p 3000:80 rac-man
+docker run -p 3000:80 rec-man
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
