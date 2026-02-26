@@ -4,7 +4,7 @@ export function AppHeader() {
   return (
     <header className={styles.header}>
       <div className={styles.breadcrumb}>
-        <span className={styles.workspace}>Rec Studio</span>
+        <span className={styles.workspace}>Rec data</span>
         <span className={styles.separator}>
           <span className="material-icons-outlined" style={{ fontSize: 16 }}>chevron_right</span>
         </span>

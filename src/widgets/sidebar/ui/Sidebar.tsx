@@ -21,7 +21,7 @@ export function Sidebar() {
       <div className={styles.workspace}>
         <div className={styles.workspaceIcon}>R</div>
         <div className={styles.workspaceInfo}>
-          <div className={styles.workspaceName}>Rec Studio</div>
+          <div className={styles.workspaceName}>Rec data</div>
           <div className={styles.workspacePlan}>Free plan</div>
         </div>
         <button type="button" className={styles.chevron}>
