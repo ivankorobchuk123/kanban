@@ -11,6 +11,7 @@ import {
   updateTaskAssignee,
   updateTaskStatus,
   updateTaskComments,
+  archiveTasks,
 } from '@/app/store/slices/tasksSlice';
 import type { StatusOption } from '@/app/store/statusOptions';
 
@@ -94,6 +95,20 @@ export function TaskDrawer({
   };
 
   const onStatusChange = (statusOption: StatusOption) => {
+    const isArchiveStatus =
+      statusOption.id === 'completed' || statusOption.id === 'canceled';
+
+    if (isArchiveStatus) {
+      dispatch(
+        archiveTasks({
+          taskIds: [taskId],
+          archiveStatus: statusOption.id as 'completed' | 'canceled',
+        })
+      );
+      handleClose();
+      return;
+    }
+
     const hasColumn = columns.some((col) => col.alias === statusOption.id);
     if (!hasColumn) {
       dispatch(

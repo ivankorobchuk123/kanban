@@ -12,7 +12,7 @@ import {
 } from '@/shared/ui/StatusSelectDropdown';
 import { TaskVariant } from '@/app/store/types';
 import { useAppSelector } from '@/shared/lib/hooks/redux';
-import { selectStatusOptions } from '@/app/store/selectors/statusSelectors';
+import { selectStatusOptionGroups } from '@/app/store/selectors/statusSelectors';
 import type { TaskDto } from '@/shared/api/types/task.dto';
 import { mockUsers } from '@/app/store/mock';
 
@@ -36,7 +36,7 @@ export function TaskProperties({
   const [isStatusOpen, setIsStatusOpen] = useState(false);
   const executorRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
-  const statusOptions = useAppSelector(selectStatusOptions);
+  const statusGroups = useAppSelector(selectStatusOptionGroups);
 
   const handleAssigneeClick = () => {
     setIsAssigneeOpen((prev) => !prev);
@@ -110,7 +110,7 @@ export function TaskProperties({
           <StatusSelectDropdown
             isOpen={isStatusOpen}
             onClose={() => setIsStatusOpen(false)}
-            options={statusOptions}
+            groups={statusGroups}
             selectedId={task.status?.id ?? ''}
             onSelect={handleStatusSelect}
             anchorRef={statusRef}
