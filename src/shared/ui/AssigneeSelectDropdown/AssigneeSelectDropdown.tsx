@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { Avatar } from '@/shared/ui/Avatar';
 
 import styles from './AssigneeSelectDropdown.module.scss';
-import type { AssigneeOption } from '@/app/store/mock';
+import type { AssigneeOption } from '@/shared/model/types';
 
 interface AssigneeSelectDropdownProps {
   isOpen: boolean;

@@ -1,12 +1,9 @@
 import type { StatusOption } from '@/app/store/statusOptions';
 import { INITIAL_STATUS_OBJECTS } from '@/app/store/statusOptions';
 import type { TaskDto } from '@/shared/api/types/task.dto';
+import type { AssigneeOption } from '@/shared/model/types';
 
-export interface AssigneeOption {
-  id: string | number;
-  name: string;
-  src: string;
-}
+export type { AssigneeOption };
 
 export const mockUsers = [
   { id: '1', src: '/images/avatar-1.jpg', name: 'John Doe' },

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 import { Badge } from '@/shared/ui/Badge';
-import type { TaskVariant } from '@/app/store/types';
+import type { TaskVariant } from '@/shared/model/types';
 
 import styles from './StatusSelectDropdown.module.scss';
 

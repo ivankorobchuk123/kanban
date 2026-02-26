@@ -1,20 +1,22 @@
-# Todo Board
+# Rec: Tasks
 
-A responsive kanban-style todo list application built with React, TypeScript, Redux Toolkit, and FSD architecture.
+A responsive kanban-style task management application built with React, TypeScript, Redux Toolkit, and FSD architecture.
 
 ## Features
 
 - Add, edit, and remove tasks
 - Add and delete columns
 - Move tasks between columns (drag & drop)
+- Reorder columns (drag & drop)
 - Mark tasks as complete/incomplete
+- Assign tasks to users
+- Add comments to tasks
+- Archive completed or canceled tasks
 - Select multiple tasks for bulk actions (delete, complete, incomplete, move)
 - Select all tasks in a column
 - Search tasks by name (with fuzzy match)
 - Filter by completion status (all, completed, incomplete)
 - Edit task text inline
-- Persist data in localStorage
-- Responsive design for desktop and mobile
 
 ## Tech Stack
 
@@ -49,12 +51,8 @@ npm run build
 src/
 ├── app/           # App config, store, providers
 ├── pages/         # Page components
-├── widgets/       # Composite UI (TaskBoard, Column)
-├── features/      # User interactions (search, filter, bulk-actions)
+├── widgets/       # Composite UI (TaskBoard, Column, Card)
+├── features/      # User interactions (search, filter, addTask, addColumn)
 ├── entities/      # Business entities (Task)
-└── shared/        # UI components, utilities, config
+└── shared/        # UI components, utilities, hooks, config
 ```
-
-## Demo
-
-Deploy to Vercel/Netlify for a live demo.
