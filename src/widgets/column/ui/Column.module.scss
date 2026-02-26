@@ -79,4 +79,53 @@
     .selectAll {
         padding: 6px 0 4px;
     }
+
+    .completedSection {
+        margin-top: 8px;
+        border-top: 1px dashed var(--grey-3);
+        padding-top: 8px;
+    }
+
+    .completedLabel {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--grey-5);
+        padding: 0 4px 6px;
+
+        span {
+            font-size: 14px;
+        }
+    }
+
+    .completedTask {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 6px;
+        border-radius: 6px;
+        opacity: 0.6;
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+    }
+
+    .completedIcon {
+        font-size: 14px !important;
+        color: var(--grey-5);
+        flex-shrink: 0;
+    }
+
+    .completedTaskTitle {
+        font-size: 13px;
+        color: var(--color-text);
+        text-decoration: line-through;
+        text-decoration-color: var(--grey-4);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }

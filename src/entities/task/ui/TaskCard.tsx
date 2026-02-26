@@ -1,7 +1,3 @@
-/**
- * Task card entity - displays a single task with checkbox, text, and actions.
- * Supports inline editing and selection.
- */
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -98,6 +94,7 @@ export function TaskCard({ task, searchQuery, isSelected, dragHandleRef }: TaskC
       if (ranges.length > 0) {
         const parts: React.ReactNode[] = []
         let lastEnd = 0
+
         ranges.forEach(([start, end]) => {
           if (start > lastEnd) {
             parts.push(<span key={`${lastEnd}-${start}`}>{task.text.slice(lastEnd, start)}</span>)
@@ -109,9 +106,11 @@ export function TaskCard({ task, searchQuery, isSelected, dragHandleRef }: TaskC
           )
           lastEnd = end
         })
+
         if (lastEnd < task.text.length) {
           parts.push(<span key={lastEnd}>{task.text.slice(lastEnd)}</span>)
         }
+
         return <span onDoubleClick={handleStartEdit}>{parts}</span>
       }
     }

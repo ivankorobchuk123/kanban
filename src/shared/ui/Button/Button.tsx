@@ -1,6 +1,4 @@
-/**
- * Reusable button component with variant styles.
- */
+
 import { type ButtonHTMLAttributes, type ReactNode } from 'react'
 
 import styles from './Button.module.scss'

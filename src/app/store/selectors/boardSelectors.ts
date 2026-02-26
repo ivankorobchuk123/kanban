@@ -1,5 +1,11 @@
 import { createSelector } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
+import type { ColumnDto, TaskEntity } from '@/app/store/mock';
+
+export type BoardColumn = Omit<ColumnDto, 'tasks'> & {
+  tasks: TaskEntity[];
+  completedTasks: TaskEntity[];
+};
 
 export const selectColumns = createSelector(
   [(state: RootState) => state.columns.columns],
@@ -35,14 +41,18 @@ export const selectBoardData = (state: RootState) => {
   }));
 };
 
+export const selectShowCompleted = (state: RootState) => state.tasks.showCompleted;
+
 export const selectFilteredBoardData = createSelector(
   [
     selectColumns,
     selectTasks,
     (state: RootState) => state.tasks.searchQuery,
     (state: RootState) => state.tasks.statusFilterIds,
+    (state: RootState) => state.tasks.showCompleted,
+    selectArchivedTasks,
   ],
-    (columns, tasks, searchQuery, statusFilterIds) => {
+  (columns, tasks, searchQuery, statusFilterIds, showCompleted, archivedTasks): BoardColumn[] => {
     let filteredColumns = columns;
 
     if (statusFilterIds !== null) {
@@ -56,26 +66,25 @@ export const selectFilteredBoardData = createSelector(
 
     const query = searchQuery.trim().toLowerCase();
 
-    if (!query) {
-      return filteredColumns.map((col) => ({
-        ...col,
-        tasks: tasks
-          .filter((item) => item.columnAlias === col.alias)
-          .sort((a, b) => a.order - b.order),
-      }));
-    }
-
-    return filteredColumns.map((col) => ({
-      ...col,
-      tasks: tasks
+    return filteredColumns.map((col) => {
+      const regularTasks = tasks
         .filter((item) => item.columnAlias === col.alias)
         .filter(
           (item) =>
+            !query ||
             (item.title ?? '').toLowerCase().includes(query) ||
             (item.comments ?? '').toLowerCase().includes(query)
         )
-        .sort((a, b) => a.order - b.order),
-    }));
+        .sort((a, b) => a.order - b.order);
+
+      const completedTasks = showCompleted
+        ? archivedTasks
+            .filter((at) => at.archiveStatus === 'completed' && at.task.columnAlias === col.alias)
+            .map((at) => at.task as TaskEntity)
+        : [];
+
+      return { ...col, tasks: regularTasks, completedTasks };
+    });
   }
 );
 

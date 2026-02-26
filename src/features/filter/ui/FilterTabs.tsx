@@ -1,6 +1,3 @@
-/**
- * Filter tabs feature - filter tasks by completion status.
- */
 import { useTranslation } from 'react-i18next'
 
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks/redux'

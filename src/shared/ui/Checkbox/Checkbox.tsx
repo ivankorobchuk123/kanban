@@ -1,6 +1,4 @@
-/**
- * Reusable checkbox component.
- */
+
 import { type InputHTMLAttributes } from 'react'
 
 import styles from './Checkbox.module.scss'

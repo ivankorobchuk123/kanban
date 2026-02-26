@@ -149,7 +149,7 @@ export function Column({ column, variant }: ColumnProps) {
     [dispatch, column.alias]
   );
 
-  const columnTaskIds = column.tasks.map((t) => String(t.id));
+  const columnTaskIds = column.tasks.map((item) => String(item.id));
   const isAllSelected =
     columnTaskIds.length > 0 &&
     columnTaskIds.every((id) => selectedTaskIds.includes(id));

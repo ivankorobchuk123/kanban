@@ -1,6 +1,4 @@
-/**
- * Reusable input component with optional label and error state.
- */
+
 import { forwardRef, type InputHTMLAttributes } from 'react'
 
 import styles from './Input.module.css'
