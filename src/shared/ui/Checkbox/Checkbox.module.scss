@@ -22,17 +22,17 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
+  &:after {
+    content: '';
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translateY(-1px);
+    opacity: 0;
+  }
 }
 
-.box::after {
-  content: '';
-  width: 6px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg) translateY(-2px);
-  opacity: 0;
-}
 
 .input:checked + .box {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);

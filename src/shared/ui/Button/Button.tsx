@@ -3,7 +3,7 @@
  */
 import { type ButtonHTMLAttributes, type ReactNode } from 'react'
 
-import styles from './Button.module.css'
+import styles from './Button.module.scss'
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost'
 

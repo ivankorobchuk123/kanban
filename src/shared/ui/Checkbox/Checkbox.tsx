@@ -3,7 +3,7 @@
  */
 import { type InputHTMLAttributes } from 'react'
 
-import styles from './Checkbox.module.css'
+import styles from './Checkbox.module.scss'
 
 interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: string

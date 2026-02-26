@@ -163,11 +163,11 @@ export function Column({ column, variant }: ColumnProps) {
             <div className={styles.dropdown} role="menu">
               <button type="button" className={styles.menuItem} onClick={handleEditColumn} role="menuitem">
                 <span className="material-icons-outlined">edit</span>
-                Редактировать
+                Edit
               </button>
               <button type="button" className={styles.menuItem} onClick={handleDeleteColumn} role="menuitem">
                 <span className="material-icons-outlined">delete</span>
-                Удалить
+                Delete
               </button>
             </div>
           )}

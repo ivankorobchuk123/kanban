@@ -21,6 +21,7 @@ const initialState = {
   tasks: mockTasks,
   activeTaskId: null as string | null,
   searchQuery: '',
+  statusFilterIds: null as string[] | null,
   selectedTaskIds: [] as string[],
   archivedTasks: [] as ArchivedTask[],
 };
@@ -352,6 +353,10 @@ const tasksSlice = createSlice({
       state.searchQuery = action.payload;
     },
 
+    setStatusFilter: (state, action: PayloadAction<string[] | null>) => {
+      state.statusFilterIds = action.payload;
+    },
+
     updateTaskComments: (
       state,
       action: PayloadAction<{
@@ -455,6 +460,7 @@ export const {
   removeTasksByColumn,
   setActiveTask,
   setSearchQuery,
+  setStatusFilter,
   toggleTaskSelection,
   selectTasks,
   clearTaskSelection,

@@ -76,6 +76,55 @@
   }
 }
 
+.filterWrapper {
+  position: relative;
+}
+
+.filterDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid var(--grey-3);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  padding: 8px 0;
+}
+
+.filterTitle {
+  padding: 6px 12px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--grey-6);
+  border-bottom: 1px solid var(--grey-3);
+  margin-bottom: 4px;
+}
+
+.filterOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--grey-2);
+  }
+}
+
+.filterBadge {
+  margin-left: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--grey-4);
+  border-radius: 10px;
+  color: var(--grey-7);
+}
+
 .newButton {
   display: flex;
   align-items: center;
